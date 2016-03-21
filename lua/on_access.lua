@@ -1,10 +1,28 @@
 
-local matcher = require "lua.module.matcher"
-local sregex  = require "lua.module.sregex"
+-- local matcher = require "lua.module.matcher"
+-- local sregex  = require "lua.module.sregex"
 
-local rules = get_from_redis(ngx.var.remote_addr) -- get rules from some cache according to remote ip
+-- local rules = get_from_redis(ngx.var.remote_addr) -- get rules from some cache according to remote ip
 
-local my_matcher = matcher:new(sregex.generate(rules))
+-- assume rules 
+-- local rules = {}
 
-my_matcher.run()
+-- local my_matcher = matcher:new(sregex.generate(rules))
+
+-- my_matcher.run()
+
+
+local rules = [[{
+    "url":[
+        {"operate":"≈", "values":{}, "action":"block", "code":"403"},
+        {"operate":"=", "values" :{}, "action":"accept"}
+    ],
+    "agent" : [
+        {"operate":"≈", "value":{}, "action" : "block", "code" : "403"}
+    ]    
+}]]
+
+local json = require "cjson"
+
+ngx.say(json.decode(rules))
 
