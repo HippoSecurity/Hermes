@@ -9,12 +9,6 @@ _M._VERSION = '0.10'
 
 local mt = { __index = _M }
 
-function _M.new( self, rules )
-    -- body
-    -- may get an rules list from params
-    return setmetatable({ rules = rules }, mt)
-end
-
 _M.matcher = {}
 
 --test_var is a basic test method, used by other test method 
@@ -136,13 +130,19 @@ _M.matcher["host"] = function ( condition )
     return test_var( condition, hostname )
 end
 
--- rules = {
---     url   = {
---         {operate="≈", values = {}, action = "block", code = "403"},
---         {operate="=", values = {}, action = "accept"}
---     }
---     agent = {operate="≈", value={}, action = "block", code = "403"}
--- }
+
+function _M.new( self, rules )
+    -- body
+    -- may get an rules list from params
+    return setmetatable({ rules = rules }, mt)
+end
+
+-- rule = [[
+-- [
+--     {"act":"url",operate":"≈", "values":"","code":"403"}
+--     {"act":"ua", operate":"≈", "value":"", "code" : "403"}  
+-- ]
+--]]
 
 function _M.run( self )
     -- body
@@ -151,8 +151,13 @@ function _M.run( self )
 
     local matcher = _M.matcher
 
-    return rules
+    for _, rule in pairs(rules) do
+        if matcher[rule.act](rule) then  -- 这里不设置允许通过的  所以直接执行reject操作
+            ngx.exit(tonumber(rule.code))
+        end
+    end
 
+    return rules
 end
 
 function _M.version( self )
@@ -161,3 +166,9 @@ function _M.version( self )
 end
 
 return _M
+
+
+
+
+
+

@@ -1,4 +1,4 @@
-local match = ngx.re.match
+local json = require "cjson"
 
 local ok, new_tab = pcall(require, "table.new")
 if not ok then
@@ -13,21 +13,18 @@ local mt = { __index = _M }
 
 -- url or ip maybe on rewrite phase
 
--- rule = [[{
---     "url":[
---         {"operate":"≈", "values":{},"code":"403"},
---         {"operate":"=", "values" :{}}
---     ],
---     "ua" : [
---         {"operate":"≈", "value":{}, "action" : "block", "code" : "403"}
---     ]    
--- }]]
+-- rule = [[
+-- [
+--     {"act":"url",operate":"≈", "values":"","code":"403"}
+--     {"act":"ua", operate":"≈", "value":"", "code" : "403"}  
+-- ]
+--]]
 
 -- maybe I can merge all rules into single one, so that match process can be faster
 function _M.generate( rules )
     -- body
     -- do match job according to rules list which comes from params
-    return rules
+    return json.decode(rules)
 end
 
 return _M
