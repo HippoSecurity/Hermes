@@ -1,0 +1,16 @@
+
+t/servroot/conf/nginx.conf
+
+t/servroot/html/index.html
+
+t/content.t
+
+t/servroot/logs/access.log
+
+Makefile
+
+logs/nginx.pid
+
+logs/access.log
+
+logs/access.log
