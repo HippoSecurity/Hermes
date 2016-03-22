@@ -49,22 +49,22 @@ local function test_var( condition, var )
 end
 
 
-matcher['url'] = function ( condition )
+_M.matcher['url'] = function ( condition )
     local uri = ngx.var.uri;
     return test_var( condition, uri )
 end
 
-matcher["ip"] = function ( condition )
+_M.matcher["ip"] = function ( condition )
     local remote_addr = ngx.var.remote_addr
     return test_var( condition, remote_addr )
 end
 
-matcher["ua"] = function ( condition )
+_M.matcher["ua"] = function ( condition )
     local http_user_agent = ngx.var.http_user_agent;
     return test_var( condition, http_user_agent )
 end
 
-matcher["refer"] = function ( condition )
+_M.matcher["refer"] = function ( condition )
     local http_referer = ngx.var.http_referer;
     return test_var( condition, http_referer )
 end
@@ -131,7 +131,7 @@ end
 --     return false
 -- end
 
-matcher["host"] = function ( condition )
+_M.matcher["host"] = function ( condition )
     local hostname = ngx.var.host
     return test_var( condition, hostname )
 end
@@ -151,6 +151,7 @@ function _M.run( self )
 
     local matcher = _M.matcher
 
+    return rules
 
 end
 
