@@ -53,11 +53,10 @@ function _M.log()
     shared_status:incr( KEY_TRAFFIC_READ, ngx.var.request_length)
     shared_status:incr( KEY_TRAFFIC_WRITE, ngx.var.bytes_sent )
     shared_status:incr( KEY_TIME_TOTAL, ngx.var.request_time )
-
+    ngx.log(ngx.ERR, ngx.var.request_time)
 end
 
 function _M.report()
-
     local shared_status = ngx.shared.status
     local var = ngx.var
 
@@ -69,7 +68,6 @@ function _M.report()
     
     report['traffic_read'] = shared_status:get( KEY_TRAFFIC_READ )
     report['traffic_write'] = shared_status:get( KEY_TRAFFIC_WRITE )
-    
     return json.encode( report )
 
 end
