@@ -18,25 +18,25 @@
     <div id="interface_login" class="interface">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title" >Hermes, You awesome WAF</h3>
+                <h3 class="panel-title" >Hermes</h3>
             </div>
             <div class="panel-body">
                 <form class="form-horizontal" onsubmit="dashboard.login(this.user.value,this.password.value); return false;">
                     <div class="form-group">
-                        <label for="inputEmail3" class="col-sm-2 control-label">User</label>
+                        <label for="inputEmail3" class="col-sm-2 control-label">用户</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" name="user" placeholder="User name">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+                        <label for="inputPassword3" class="col-sm-2 control-label">密码</label>
                         <div class="col-sm-10">
                             <input type="password" class="form-control" name="password" placeholder="Password">
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
-                            <button type="submit" class="btn btn-default">Log in</button>
+                            <button type="submit" class="btn btn-default">登录</button>
                         </div>
                     </div>
                 </form>
@@ -79,7 +79,7 @@
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li class="topnav" id="topnav_logout" >
-                            <a href="#" onclick="dashboard.logout()" >Logout</a>
+                            <a href="#" onclick="dashboard.logout()" >退出登录</a>
                         </li>
                     </ul>
                 </div>
@@ -111,7 +111,7 @@
                 
                 <div class="row">
                     <div class="col-md-4">
-                        <div class="status_sub_group_title">TCP Connections</div>
+                        <div class="status_sub_group_title">情报中心</div>
                         <div id="chart_connection_container">
                             <canvas id="chart_connection" width="700" height="400"></canvas>
                         </div>
@@ -120,16 +120,16 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <span class="status_color_mark" style="background-color:rgba(220,220,220,1)"></span>
-                                    <span class="status_color_desc">All</span>
+                                    <span class="status_color_desc">所有行为</span>
                                 </div>
                                 <div class="col-sm-4">
-                                    <span class="status_color_mark" style="background-color:rgba(151,187,205,1)"></span>
-                                    <span class="status_color_desc">Writing</span>
+                                    <span class="status_color_mark" style="background-color:rgba(151,200,0,1)"></span>
+                                    <span class="status_color_desc">危险Ip</span>
                                 </div>
-                                <div class="col-sm-4">
+<!--                                 <div class="col-sm-4">
                                     <span class="status_color_mark" style="background-color:rgba(151,205,187,1)"></span>
                                     <span class="status_color_desc">Reading</span>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
 
@@ -146,7 +146,7 @@
 
                     <div class="col-md-4">
                         <div class="status_sub_group_title">网络流量</div>
-                        <div class="status_sub_group_title_desc"> (KiB/s) </div>
+                        <div class="status_sub_group_title_desc"> (字节/秒) </div>
                         <div id="chart_traffic_container">
                             <canvas id="chart_traffic" width="700" height="400"></canvas>
                         </div>
@@ -155,11 +155,11 @@
                             <div class="row">
                                 <div class="col-sm-6">
                                     <span class="status_color_mark" style="background-color:rgba(220,220,220,1)"></span>
-                                    <span class="status_color_desc">Out</span>
+                                    <span class="status_color_desc">流入</span>
                                 </div>
                                 <div class="col-sm-6">
                                     <span class="status_color_mark" style="background-color:rgba(151,187,205,1)"></span>
-                                    <span class="status_color_desc">In</span>
+                                    <span class="status_color_desc">流出</span>
                                 </div>
                             </div>
                         </div>
@@ -174,19 +174,19 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <h4 class="modal-title">Status Dashboard config</h4>
+                                <h4 class="modal-title">配置</h4>
                             </div>
                             <div class="modal-body" id="console_div" >
 
                                 <form class="form-horizontal" onsubmit="return false;">
                                     <div class="row vn_modal_row" >
-                                        <label class="col-sm-5 text-right">Enable Animation</label>
+                                        <label class="col-sm-5 text-right">动态更新</label>
                                         <div class="col-sm-5">
                                             <input type="checkbox" name="enable_animation">
                                         </div>
                                     </div>
                                     <div class="row vn_modal_row" >
-                                        <label class="col-sm-5 text-right" >Refresh Interval</label>
+                                        <label class="col-sm-5 text-right" >更新频率</label>
                                         <div class="col-sm-5">
                                             <input type="range" name="refresh_interval" value="3" min="1" max="15" oninput="dashboard.status_dashboard_update_interval_label()">
                                         </div>
@@ -197,7 +197,7 @@
                                 </form>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-default" onclick="dashboard.save_status_dashboard_config()">Save</button>
+                                <button type="button" class="btn btn-default" onclick="dashboard.save_status_dashboard_config()">保存</button>
                               </div>
                         </div><!-- /.modal-content -->
                     </div><!-- /.modal-dialog -->
