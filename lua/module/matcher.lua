@@ -4,6 +4,8 @@ if not ok then
     new_tab = function (narr, nrec) return {} end
 end
 
+local var = ngx.var
+
 local _M = new_tab(0, 4)
 _M._VERSION = '0.10'
 
@@ -42,24 +44,23 @@ local function test_var( condition, var )
     return false
 end
 
-
 _M.matcher['url'] = function ( condition )
-    local uri = ngx.var.uri;
+    local uri = var.uri;
     return test_var( condition, uri )
 end
 
 _M.matcher["ip"] = function ( condition )
-    local remote_addr = ngx.var.remote_addr
+    local remote_addr = var.remote_addr
     return test_var( condition, remote_addr )
 end
 
 _M.matcher["ua"] = function ( condition )
-    local http_user_agent = ngx.var.http_user_agent;
+    local http_user_agent = var.http_user_agent;
     return test_var( condition, http_user_agent )
 end
 
 _M.matcher["refer"] = function ( condition )
-    local http_referer = ngx.var.http_referer;
+    local http_referer = var.http_referer;
     return test_var( condition, http_referer )
 end
 
@@ -126,23 +127,38 @@ end
 -- end
 
 _M.matcher["host"] = function ( condition )
-    local hostname = ngx.var.host
+    local hostname = var.host
     return test_var( condition, hostname )
 end
 
+_M.matcher["cc"] = function ( condition )
+    local ccount = condition["value"].cnt
+    local csecs  = condition["value"].sec
+
+    local limited = ngx.shared["limit"]
+
+    local ip  = var.remote_addr or "unknown"
+    local token = ip..var.uri
+
+    local req = limited:get(token)
+    if req then
+        if req >= ccount then
+            return true
+        else
+            limited:incr(token, 1)
+        end
+    else
+        limited:set(token, 1, csecs)
+    end
+
+    return false
+end
 
 function _M.new( self, rules )
     -- body
     -- may get an rules list from params
     return setmetatable({ rules = rules }, mt)
 end
-
--- rule = [[
--- [
---     {"act":"url",operate":"≈", "values":"","code":"403"}
---     {"act":"ua", operate":"≈", "value":"", "code" : "403"}  
--- ]
---]]
 
 function _M.run( self )
     -- body
@@ -152,7 +168,7 @@ function _M.run( self )
     local matcher = _M.matcher
 
     for _, rule in pairs(rules) do
-        if matcher[rule.act](rule) then  -- 这里不设置允许通过的  所以直接执行reject操作
+        if matcher[rule.type](rule) then  -- 这里不设置允许通过的  所以直接执行reject操作
             ngx.exit(tonumber(rule.code))
         end
     end

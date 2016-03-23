@@ -1,15 +1,11 @@
 local matcher = require "lua.module.matcher"
 local sregex  = require "lua.module.sregex"
+local fetcher = require "lua.module.fetcher"
+-- local router  = require "lua.module.router"
 
--- local rules = get_from_redis(ngx.var.remote_addr) -- get rules from some cache according to remote ip
-
--- assume rules 
-local rules = [=[
-    [
-        {"act":"url","operate":"!≈", "value":"test","code":"403"},
-        {"act":"url","operate":"≈", "value":"test1","code":"403"}
-    ]
-]=]
+-- get rules from some cache according to remote ip
+local rules = fetcher.get_rules(ngx.var.remote_addr, ngx.var.request_uri) 
 
 matcher:new(sregex.generate(rules)):run()
 
+-- router:run()

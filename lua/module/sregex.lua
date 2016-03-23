@@ -10,16 +10,6 @@ _M._VERSION = '0.10'
 
 local mt = { __index = _M }
 
-
--- url or ip maybe on rewrite phase
-
--- rule = [[
--- [
---     {"act":"url",operate":"≈", "values":"","code":"403"}
---     {"act":"ua", operate":"≈", "value":"", "code" : "403"}  
--- ]
---]]
-
 -- maybe I can merge all rules into single one, so that match process can be faster
 function _M.generate( rules )
     -- body
