@@ -49,15 +49,15 @@ dashboard.init = function(){
 
 dashboard.login = function(user,password){
     console.log("login with:",user,password);
-    $.post("/login",data={user:user,password:password},function(data,status){
+    $.post("/dashboard/login",data={user:user,password:password},function(data,status){
         if( data['ret'] == "success" ){
             dashboard.switch_to_interface('dashboard');
             config.get_config();
-            dashboard.notify("Login Success");
+            dashboard.notify("登陆成功");
             window.setTimeout( monitor.build_chart, 0 );
             window.setTimeout( monitor.start, 0 );
         }else{
-            dashboard.notify("login failed");
+            dashboard.notify("登陆失败");
         }
     });
 }
@@ -67,7 +67,7 @@ dashboard.logout = function(){
     $.cookie( 'verynginx_user', null,{ path: '/verynginx'} );
     $.cookie( 'verynginx_session', null, { path: '/verynginx'} );  
     dashboard.switch_to_interface('login');
-    dashboard.notify("Logout Success");
+    dashboard.notify("注销");
 }
 
 

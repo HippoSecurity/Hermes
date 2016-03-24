@@ -1,3 +1,4 @@
+local redis = require "resty.redis"
 
 local ok, new_tab = pcall(require, "table.new")
 if not ok then
@@ -20,13 +21,13 @@ local mt = { __index = _M }
 --]]
 
 local KEY_RULE = "M_"
-
+-- {"type":"cc", "value":{"cnt":100, "sec":60}, "code":"403", "block":true, "timeout":0},
 -- get rules according to ip and uri, if do not match any specified rules,use default one
 function _M.get_rules( ip, uri )
  
    local rules = [=[
         [
-            {"type":"cc", "value":{"cnt":100, "sec":60}, "code":"403", "block":true, "timeout":0},
+            
             {"type":"url","operate":"≈", "value":"test1","code":403}
         ]
     ]=]
@@ -34,10 +35,8 @@ function _M.get_rules( ip, uri )
 end
 
 
-local function fetch_from_redis( ip, port )
+local function fetch_from_redis( ip, port, ip, uri )
     -- body
-    local redis = require "resty.redis"
-
     local red = redis:new()
 
     red:set_timeout(1000)
@@ -49,14 +48,20 @@ local function fetch_from_redis( ip, port )
         return ngx.exit(ngx.HTTP_SERVICE_UNAVAILABLE)
     end
 
-    local res, err = red:hget(KEY_RULE, "default")
+    local res, err = red:hget(KEY_RULE, ip)
+
+    res, err = red:hget(KEY_RULE, url)
+
+    res, err = red:hget(KEY_RULE, ip .. url)
+
+    res, err = red:hget(KEY_RULE, "default")
+    
     if err then
         ngx.log(ngx.ERR, "fail to get rule: ", err)
         return ngx.exit(ngx.HTTP_SERVICE_UNAVAILABLE)
     end
 
-    return res 
-
+    return res
 end
 
 local function fetch_from_local_files( path_to_file )

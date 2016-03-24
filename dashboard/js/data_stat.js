@@ -32,23 +32,24 @@ data_stat.get_data = function () {
 
     $('#url_details').html(""); // 动态生成表格前将表格清空
 
-    var url_short = "/verynginx/summary?type=short";
-    var url_long  = "/verynginx/summary?type=long";
-    var data_url;
+    // var url = "/dashboard/summary";
+    // var url_short = "/dashboard/summary";
+    // var url_long  = "/verynginx/summary?type=long";
+    var data_url = "/dashboard/summary";
 
     // 判断数据量
-    if ($("#def_btn").text() == 'All') {
-        data_url = url_long;
-        $("#summary_type_note").css("display", "none");
-    } else {
-        data_url = url_short;
-        $("#summary_type_note").css("display", "inline-block");
-    };
+    // if ($("#def_btn").text() == 'All') {
+    //     data_url = url_long;
+    //     $("#summary_type_note").css("display", "none");
+    // } else {
+    //     data_url = url_short;
+    //     $("#summary_type_note").css("display", "inline-block");
+    // };
 
     $.ajax({
         type: "GET",
         url: data_url,
-        // url: "/verynginx/summary?type=long",
+        // url: "/dashboard/summary",
         data_Type: "json",
 
         success: function (json_data) {

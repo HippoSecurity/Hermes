@@ -1209,19 +1209,19 @@
                 <!-- Single button -->
                 <div>
                     <div id="summary_title">
-                        Request Summary
+                        请求统计
                     </div>
 
                     <div id="summary_action_bar">
                         <div style="display:inline-block;">
-                            <div id="summary_filter_label" >Filter</div>
-                            <input id="summary_filter_input" type="text" class="form-control" oninput="data_stat.search(this.value)" placeholder="try input a URI...">
+                            <div id="summary_filter_label" >过滤</div>
+                            <input id="summary_filter_input" type="text" class="form-control" oninput="data_stat.search(this.value)" placeholder="输入URL地址">
                         </div>
 
                         <div class="pull-right" >
-                            <div id="summary_control_label" >Data Type</div>
+                            <!-- <div id="summary_control_label" >Data Type</div> -->
                             
-                            <div class="btn-group">
+                            <!-- <div class="btn-group">
                                 <div class="btn-group">
                                     <button type="button" style="width:120px;" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="def_btn">All<span class="caret"></span></button>
                                     <ul class="dropdown-menu">
@@ -1230,26 +1230,26 @@
                                     </ul>
                                 </div>
                                 <button type="button" class="btn btn-default" id="summary_data_refresh" onclick="data_stat.get_data()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
                
                 <div id="summary_type_note">
-                    <span>Notice: The temporary summary will be clead every minute.</span>
+                    <!-- <span>Notice: The temporary summary will be clead every minute.</span> -->
                 </div>
                 
                 <table class="table table-hover table-bordered display" id="url_table">
                     <thead>
                         <tr>
-                            <th>Index</th>
+                            <th>序号</th>
                             <th>URI</th>
-                            <th>Count</th>
-                            <th>Size(Bytes)</th>
-                            <th>Avg size(Bytes)</th>
-                            <th>Success rate</th>
-                            <th>Time(s)</th>
-                            <th>Avg time(s)</th>
+                            <th>次数</th>
+                            <th>流量(Bytes)</th>
+                            <th>平均大小(Bytes)</th>
+                            <th>成功率</th>
+                            <th>响应时间(s)</th>
+                            <th>平均响应时间(s)</th>
                         </tr>
                     </thead>
                     <tbody id="url_details">
@@ -1263,10 +1263,10 @@
         
         <div class="page" id="page_about">
             <div style="padding-top:100px">
-                <h1 class="text-center" id="about_title">Very Nginx</h1>
-                <h3 class="text-center" id="about_sub_title">A very powerful and friendly nginx</h3>
+                <h1 class="text-center" id="about_title">Hermes</h1>
+                <h3 class="text-center" id="about_sub_title"><!-- 保护你的网站 --></h3>
                 <div id="about_sub_btn_container">
-                    <a id="about_sub_btn" target="_blank" href="https://github.com/alexazhou/VeryNginx">
+                    <a id="about_sub_btn" target="_blank" href="https://github.com/hipposecurity/Hermes">
                         Look in Github
                     </a>
                 </div>

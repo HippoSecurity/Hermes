@@ -228,7 +228,7 @@ monitor.animation_enable = function(){
 monitor.refresh = function(){
     //console.log("monitor refresh");
 
-    $.get("/status",function(data,status){
+    $.get("/dashboard/status",function(data,status){
         if( status != 'success' ){
             return;
         }

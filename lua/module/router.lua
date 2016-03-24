@@ -4,7 +4,7 @@
 -- -- @Link    : 
 -- -- @Disc    : url router
 
--- local summary = require "summary"
+local summary = require "lua.module.summary"
 local status = require "lua.module.status"
 -- local cookie = require "cookie"
 -- local VeryNginxConfig = require "VeryNginxConfig"
@@ -161,9 +161,10 @@ function _M.home_path()
 end
 
 _M.root_path = _M.home_path()
-_M.url_route["post /login"] = _M.login
--- _M.url_route["get /summary"] = summary.report
-_M.url_route["get /status"] = status.report
+_M.url_route["post /dashboard/login"] = _M.login
+_M.url_route["get /dashboard/summary"] = summary.report
+_M.url_route["get /dashboard/status"] = status.report
+_M.url_route["get /dashboard/clear"] = summary.clear
 -- _M.url_route["get /verynginx/config"] = VeryNginxConfig.report
 -- _M.url_route["post /verynginx/config"] = VeryNginxConfig.set
 -- _M.url_route["get /verynginx/loadconfig"] = VeryNginxConfig.load_from_file
