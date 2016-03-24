@@ -1,6 +1,16 @@
 local http = require "resty.http"
 local httpc = http.new()
 
+local random_string = function (m)
+    local length = 8
+     math.randomseed(ngx.now())
+     local random_str = ''
+     for i = 1, length do
+         random_str = random_str .. string.char(math.math.random(65, 90))
+     end
+     return random_str
+ end
+
 local url = 'http://www.xueqiu.com/'--ngx.var.scheme .. "://" .. "xueqiu.com" .. ngx.var.request_uri
 local res, err = httpc:request_uri(url,{
     headers = {
@@ -13,13 +23,12 @@ local res, err = httpc:request_uri(url,{
 
 if not err and res and res.status == ngx.HTTP_OK then
     local response = res.body
-    local from, n, err = ngx.re.find(res.body, [[input type="text"]])
-    if from then
-        local newstr, n, err = ngx.re.gsub(res.body, '"password"', '"#ksajDSmL"')
-        if newstr then
-            response = newstr
-        end
+
+    local newstr, n, err = ngx.re.gsub(res.body, [[<input type="text" name="(username)" placeholder="手机号 / 邮箱">]], random_string)
+    if newstr then
+        response = newstr
     end
+
     ngx.say(response)
 else
     ngx.exit(res.status)
