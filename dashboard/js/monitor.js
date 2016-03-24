@@ -228,7 +228,7 @@ monitor.animation_enable = function(){
 monitor.refresh = function(){
     //console.log("monitor refresh");
 
-    $.get("/verynginx/status",function(data,status){
+    $.get("/status",function(data,status){
         if( status != 'success' ){
             return;
         }
@@ -244,9 +244,9 @@ monitor.refresh = function(){
 
             var requests_all_change = data['request_all_count'] - monitor.latest_status['request_all_count']; 
             var requests_success_change = data['request_success_count'] - monitor.latest_status['request_success_count'];
-            var connections_active = data['connections_active'];
-            var connections_reading = data['connections_reading'];
-            var connections_writing = data['connections_writing'];
+            // var connections_active = data['connections_active'];
+            // var connections_reading = data['connections_reading'];
+            // var connections_writing = data['connections_writing'];
             var avg_request_all = requests_all_change / time_change;
             var avg_request_success = requests_success_change / time_change;
             var time_str = monitor.time_str();
@@ -264,7 +264,7 @@ monitor.refresh = function(){
             var avg_traffic_write = traffic_write_change / (time_change*1024);
             
             monitor.chart_request.addData([avg_request_all,avg_request_success], time_str);
-            monitor.chart_connection.addData( [ connections_active,connections_writing,connections_reading ], sub_label )
+           
             monitor.chart_response_time.addData( [ avg_response_time ], sub_label )
             monitor.chart_traffic.addData( [ avg_traffic_read, avg_traffic_write ], sub_label )
 
@@ -290,7 +290,7 @@ monitor.refresh = function(){
 
 monitor.update_config =function(){
 
-    console.log('monitor.save_config');
+    // console.log('monitor.save_config');
     monitor.stop();
     monitor.start();
 }

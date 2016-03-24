@@ -5,7 +5,7 @@
 -- -- @Disc    : url router
 
 -- local summary = require "summary"
--- local status = require "status"
+local status = require "lua.module.status"
 -- local cookie = require "cookie"
 -- local VeryNginxConfig = require "VeryNginxConfig"
 -- local encrypt_seed = require "encrypt_seed"
@@ -27,14 +27,16 @@ function _M.run()
     if handle ~= nil then
         ngx.header.content_type = "application/json"
         ngx.header.charset = "utf-8"
-        if action == "post /login" or _M.check_session() == true then
-            ngx.say( handle() )
-            ngx.exit(200)
-        else
-            local info = cjson.encode({["ret"]="failed",["err"]="need login"})
-            ngx.say( info )
-            ngx.exit(200)
-        end
+        ngx.say(handle())
+        -- if action == "post /login" then
+        -- -- if action == "post /login" or _M.check_session() == true then
+        --     ngx.say( handle() )
+        --     ngx.exit(200)
+        -- else
+        --     local info = json.encode({["ret"]="failed",["err"]="need login"})
+        --     ngx.say( info )
+        --     ngx.exit(200)
+        -- end
     elseif string.find(action,"get /dashboard") == 1 then
         ngx.header.content_type = "text/html"
         ngx.header.charset = "utf-8"
@@ -149,7 +151,6 @@ function _M.login()
     -- end 
     
     -- return cjson.encode({["ret"]="failed",["err"]=err})
-    ngx.log(ngx.ERR, "fucking herer!!!")
     return json.encode({["ret"]="success",["err"]=err})
 end
 
@@ -161,8 +162,8 @@ end
 
 _M.root_path = _M.home_path()
 _M.url_route["post /login"] = _M.login
--- _M.url_route["get /verynginx/summary"] = summary.report
--- _M.url_route["get /verynginx/status"] = status.report
+-- _M.url_route["get /summary"] = summary.report
+_M.url_route["get /status"] = status.report
 -- _M.url_route["get /verynginx/config"] = VeryNginxConfig.report
 -- _M.url_route["post /verynginx/config"] = VeryNginxConfig.set
 -- _M.url_route["get /verynginx/loadconfig"] = VeryNginxConfig.load_from_file
