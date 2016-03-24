@@ -3,12 +3,12 @@ local httpc = http.new()
 
 local random_string = function (m)
     local length = 8
-     math.randomseed(ngx.now())
-     local random_str = ''
-     for i = 1, length do
-         random_str = random_str .. string.char(math.math.random(65, 90))
-     end
-     return random_str
+    math.randomseed(ngx.now())
+    local random_str = ''
+    for i = 1, length do
+        random_str = random_str .. string.char(math.math.random(65, 90))
+    end
+    return random_str
  end
 
 local url = 'http://www.xueqiu.com/'--ngx.var.scheme .. "://" .. "xueqiu.com" .. ngx.var.request_uri
