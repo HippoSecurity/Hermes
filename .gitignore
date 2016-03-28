@@ -14,3 +14,15 @@ logs/nginx.pid
 logs/access.log
 
 logs/access.log
+
+lua/ngx.var statics.txt
+
+*.pid
+
+logs/access.log
+
+logs/access.log
+
+logs/access.log
+
+logs/access.log
