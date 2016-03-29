@@ -8,7 +8,7 @@ local json = require "cjson"
 
 local _M = {}
 
-local KEY_SINGLETON_ = "M_"
+local KEY_CONFIG_ = "M_CONF_"
 
 local function sys_cache_store(key, value)
     -- body
@@ -24,6 +24,27 @@ local function sys_cache_store(key, value)
         ngx.log(ngx.WARN, "forcible some key when sys_cache_store, key = ", key, "value = ", value)
     end
 
+end
+
+function _M.sys_fetch_mid()
+    local sys = ngx.shared["sys"]
+
+    local mid, _ = sys:get(KEY_CONFIG_ .. "MID")
+
+    ngx.log(ngx.DEBUG, "get edge mid: ", mid)
+
+    return mid
+end
+
+function _M.sys_fetch_addr()
+    -- body
+    local sys = ngx.shared["sys"]
+
+    local addr, _ = sys:get(KEY_CONFIG_ .. "ADDR")
+
+    ngx.log(ngx.DEBUG, "get upload addr: ", addr)
+
+    return addr
 end
 
 -- init singleton configure
@@ -44,8 +65,12 @@ function _M.init()
     local config = json.decode(data)
 
     if 32 == #config.mid then
-        sys_cache_store(KEY_SINGLETON_ .. "singleton_mid", config.mid)
-        return 
+        return sys_cache_store(KEY_CONFIG_ .. "MID", config.mid) 
+    end
+
+    -- maybe you can check invalid ip addr
+    if not config.addr then
+        return sys_cache_store(KEY_CONFIG_ .. "ADDR", config.addr)
     end
 
     config.mid = ngx.md5(ngx.time())
