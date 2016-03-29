@@ -15,19 +15,10 @@ local KEY_URI_SIZE = "C_"
 local KEY_URI_TIME = "D_"
 local KEY_URI_COUNT = "E_"
 
-function _M.clear()
-    local summary = ngx.shared['summary']
-    summary:flush_all()
-end
+function _M.document()
 
-function _M.log()
-
-    local summary = ngx.shared['summary']
+    local summary = ngx.shared.summary
     local uri = ngx.var.uri 
-
-    if ngx.re.find(uri, '/dashboard') then --过滤 dashboard 的请求
-        return
-    end
 
     local status_code = ngx.var.status;
     local key_status = KEY_URI_STATUS..uri.."_"..status_code

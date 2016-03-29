@@ -98,6 +98,8 @@ end
 _M.root_path = home_path()
 
 _M.url_route["post /dashboard/login"] = _M.login
-_M.url_route["post /api/upload_info"] = info.report
+
+_M.url_route["post /api/upload_info"] = summary.document
+_M.url_route["post /api/"] = 
 
 return _M
