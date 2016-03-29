@@ -12,7 +12,7 @@ local function upload_info( premature )
 
     local data = {summary=summary.report(), status=status.report()} -- may get from status
 
-    local res, err = httpc:request_uri("http://" .. config.sys_fetch_addr() or "127.0.0.1:80" .. "/api/upload_info.json", {
+    local res, err = httpc:request_uri("http://" .. config.sys_fetch_addr() or "127.0.0.1:80" .. "/api/upload_info", {
             method = "POST",
             body = json.encode({mid=config.sys_fetch_mid(), time=ngx.time(), name=config.sys_fetch_name(), data=data})
         })

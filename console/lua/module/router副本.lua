@@ -61,6 +61,72 @@ function _M.run()
 
 end
 
+-- function _M.filter() 
+--     local action = string.lower(ngx.req.get_method().." "..ngx.var.uri)
+--     local handle = _M.url_route[ action ]
+--     if handle ~= nil then
+--         ngx.header.content_type = "application/json"
+--         ngx.header.charset = "utf-8"
+--         if action == "post /verynginx/login" or _M.check_session() == true then
+--             ngx.say( handle() )
+--             ngx.exit(200)
+--         else
+--             local info = cjson.encode({["ret"]="failed",["err"]="need login"})
+--             ngx.say( info )
+--             ngx.exit(200)
+--         end
+--     elseif string.find(action,"get /verynginx/dashboard") == 1 then
+--         ngx.header.content_type = "text/html"
+--         ngx.header.charset = "utf-8"
+--         for k,v in pairs( _M.mime_type ) do
+--             if string.sub(action, string.len(action) - string.len(k) + 1 ) == k then
+--                 ngx.header.content_type = v
+--                 break
+--             end
+--         end
+
+--         local path = VeryNginxConfig.home_path() .."/dashboard" .. string.sub( ngx.var.uri, string.len( "/verynginx/dashboard") + 1 )
+--         f = io.open( path, 'r' )
+--         if f ~= nil then
+--             ngx.say( f:read("*all") )
+--             f:close()
+--             ngx.exit(200)
+--         else        
+--             ngx.exit(404)
+--         end
+--     end
+-- end
+
+-- function _M.check_session()
+--     -- get all cookies
+--     local user, session
+    
+--     local cookie_obj, err = cookie:new()
+--     local fields = cookie_obj:get_all()
+--     if not fields then
+--         return false
+--     end
+    
+--     user = fields['verynginx_user'] 
+--     session = fields['verynginx_session']
+    
+--     if user == nil or session == nil then
+--         return false
+--     end
+    
+--     for i,v in ipairs( VeryNginxConfig.configs['admin'] ) do
+--         if v["user"] == user and v["enable"] == true then
+--             if session == ngx.md5( encrypt_seed.get_seed()..v["user"]) then
+--                 return true
+--             else
+--                 return false
+--             end
+--         end
+--     end
+    
+--     return false
+-- end
+
 function _M.login()  
     -- local args = nil
     -- local err = nil
@@ -89,13 +155,13 @@ function _M.login()
     return json.encode({["ret"]="success",["err"]=err})
 end
 
-local function home_path()
+function _M.home_path()
     local current_script_path = debug.getinfo(1, "S").source:sub(2)
     local home_path = current_script_path:sub( 1, 0 - string.len("/lua/module/router.lua") -1 ) 
     return home_path
 end
 
-_M.root_path = home_path()
+_M.root_path = _M.home_path()
 
 _M.url_route["post /dashboard/login"] = _M.login
 _M.url_route["post /api/upload_info"] = info.report

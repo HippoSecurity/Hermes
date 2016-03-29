@@ -1,3 +1,8 @@
+-- -*- coding: utf-8 -*-
+-- -- @Date    : 2015-01-27 05:56
+-- -- @Author  : Alexa (AlexaZhou@163.com)
+-- -- @Link    : 
+-- -- @Disc    : record nginx infomation 
 
 local ok, new_tab = pcall(require, "table.new")
 if not ok then

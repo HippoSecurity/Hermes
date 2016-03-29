@@ -1,3 +1,9 @@
+-- -*- coding: utf-8 -*-
+-- -- @Date    : 2016-03-29 16:40
+-- -- @Author  : Aifei (aifei@openresty.org)
+-- -- @Link    : 
+-- -- @Disc    : record nginx infomation 
+
 local redis = require "resty.redis"
 
 local ok, new_tab = pcall(require, "table.new")
