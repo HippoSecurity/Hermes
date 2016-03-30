@@ -1,6 +1,6 @@
 -- -*- coding: utf-8 -*-
--- -- @Date    : 2015-01-27 05:56
--- -- @Author  : Alexa (AlexaZhou@163.com)
+-- -- @Date    : 2016-03-28 15:40
+-- -- @Author  : Aifei (aifei@openresty.org)
 -- -- @Link    : 
 -- -- @Disc    : record nginx infomation 
 
@@ -8,67 +8,75 @@ local json = require "cjson"
 
 local _M = {}
 
-local KEY_STATUS_INIT = "I_"
+local KEY_EDGE_INFO  = "M_"
 
-local KEY_START_TIME = "G_"
+local function process_edge_info()
+    -- body
+    ngx.req.read_body()
 
-local KEY_TOTAL_COUNT = "F_"
-local KEY_TOTAL_COUNT_SUCCESS = "H_"
+    local body = ngx.var.request_body
 
-local KEY_TRAFFIC_READ = "J_"
-local KEY_TRAFFIC_WRITE = "K_"
+    local body_json = json.decode(body)
 
-local KEY_TIME_TOTAL = "L_"
+    local edge = { mid = body_json.mid, name = body_json.name, ip = ngx.var.remote_addr }
 
-
--- maybe optimized, read from redis
-function _M.init()
-
-    local shared_status = ngx.shared.status
-
-    local ok, err = shared_status:add( KEY_STATUS_INIT, true )
-
-    if ok then
-		shared_status:set( KEY_TOTAL_COUNT, 0 )
-		shared_status:set( KEY_TOTAL_COUNT_SUCCESS, 0 )
-		
-        shared_status:set( KEY_TRAFFIC_READ, 0 )
-		shared_status:set( KEY_TRAFFIC_WRITE, 0 )
-		
-        shared_status:set( KEY_TIME_TOTAL, 0 )
-    end
-
+    return edge, body_json.data
 end
 
 --add global count info
-function _M.log()
-    local shared_status = ngx.shared.status
+function _M.document()
+    local edge, data = process_edge_info()
+    local shared_edges  = ngx.shared.c_edges
+    local shared_status = ngx.shared.c_status
 
-    shared_status:incr( KEY_TOTAL_COUNT, 1 )
+    local status = {
+        t_cnt     = data.total_cnt or 0,
+        s_cnt     = data.suc_cnt or 0,
+        req_len   = data.avg_request_length or 0,
+        bytes_sent= data.avg_bytes_sent or 0,
+    }
 
-    if tonumber(ngx.var.status) < 400 then
-        shared_status:incr( KEY_TOTAL_COUNT_SUCCESS, 1 )
-    end
+    shared_status:set(edge.mid , json.encode(status))
 
-    shared_status:incr( KEY_TRAFFIC_READ, ngx.var.request_length)
-    shared_status:incr( KEY_TRAFFIC_WRITE, ngx.var.bytes_sent )
-    shared_status:incr( KEY_TIME_TOTAL, ngx.var.request_time )
+    shared_edges:set( edge.mid, json.encode(edge) )
+
 end
 
+function _M.edges()
+    -- body
+    local shared_edges = ngx.shared.c_edges
+
+    local edges = shared_edges:get_keys(0)
+
+    local result = {}
+
+    for _, mid in pairs(edges) do 
+        result[mid] = json.decode(shared_edges:get(mid))
+    end
+
+    ngx.say(json.encode(result))
+end
+
+
 function _M.report()
-    local shared_status = ngx.shared.status
-    local var = ngx.var
+    local mid = ngx.var.arg_mid
 
-    local report = {}
-    report['request_all_count'] = shared_status:get( KEY_TOTAL_COUNT )
-    report['request_success_count'] = shared_status:get( KEY_TOTAL_COUNT_SUCCESS )
-    report['time'] = ngx.now()
-    report['response_time_total'] = shared_status:get( KEY_TIME_TOTAL )
+    if not mid then
+        return ngx.exit(400)
+    end
+
+    local shared_status = ngx.shared.c_status
+
+    local report = shared_status:get(mid)
+    -- report['request_all_count'] = shared_status:get( KEY_TOTAL_CNT .. mid )
+    -- report['request_success_count'] = shared_status:get( KEY_SUCCESS_CNT .. mid)
+    -- report['response_time_total'] = shared_status:get( KEY_TIME_TOTAL .. mid)
     
-    report['traffic_read'] = shared_status:get( KEY_TRAFFIC_READ )
-    report['traffic_write'] = shared_status:get( KEY_TRAFFIC_WRITE )
-    return json.encode( report )
+    -- report['traffic_read'] = shared_status:get( KEY_TRAFFIC_READ .. mid)
+    -- report['traffic_write'] = shared_status:get( KEY_TRAFFIC_WRITE .. mid)
 
+
+    ngx.say(json.encode( report ))
 end
 
 return _M

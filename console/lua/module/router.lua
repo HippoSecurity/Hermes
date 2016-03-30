@@ -1,14 +1,12 @@
 -- -*- coding: utf-8 -*-
--- -- @Date    : 2016-01-02 00:35
--- -- @Author  : Alexa (AlexaZhou@163.com)
+-- -- @Date    : 2016-03-28 15:40
+-- -- @Author  : Aifei (aifei@openresty.org)
 -- -- @Link    : 
--- -- @Disc    : url router
+-- -- @Disc    : record nginx infomation 
 
 local summary = require "lua.module.summary"
 local status = require "lua.module.status"
--- local cookie = require "cookie"
--- local VeryNginxConfig = require "VeryNginxConfig"
--- local encrypt_seed = require "encrypt_seed"
+local dd = require "lua.module.dd"
 local json = require "cjson"
 
 local _M = {}
@@ -24,20 +22,14 @@ function _M.run()
     local action = string.lower(ngx.req.get_method().." "..ngx.var.uri)
 
     local handle = _M.url_route[ action ]
-    if handle ~= nil then
+
+    if handle == nil then
+        return ngx.exit(404)
+    elseif ngx.re.find(action, "(get|post) /api") then
         ngx.header.content_type = "application/json"
         ngx.header.charset = "utf-8"
-        ngx.say(handle())
-        -- if action == "post /login" then
-        -- -- if action == "post /login" or _M.check_session() == true then
-        --     ngx.say( handle() )
-        --     ngx.exit(200)
-        -- else
-        --     local info = json.encode({["ret"]="failed",["err"]="need login"})
-        --     ngx.say( info )
-        --     ngx.exit(200)
-        -- end
-    elseif string.find(action,"get /dashboard") == 1 then
+        handle()
+    elseif ngx.re.find(action,"(get|post) /dashboard") == 1 then
         ngx.header.content_type = "text/html"
         ngx.header.charset = "utf-8"
         for k,v in pairs( _M.mime_type ) do
@@ -99,7 +91,13 @@ _M.root_path = home_path()
 
 _M.url_route["post /dashboard/login"] = _M.login
 
-_M.url_route["post /api/upload_info"] = summary.document
-_M.url_route["post /api/"] = 
+_M.url_route["post /api/upload_status"] = status.document
+
+_M.url_route["get /api/edges"] = status.edges
+
+_M.url_route["get /api/report"] = status.report
+
+_M.url_route["get /api/debug"] = dd.show
+-- _M.url_route["get /api/fetch_edges"] = summary.fetch_edges
 
 return _M

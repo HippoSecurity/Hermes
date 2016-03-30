@@ -15,9 +15,10 @@ local KEY_URI_SIZE = "C_"
 local KEY_URI_TIME = "D_"
 local KEY_URI_COUNT = "E_"
 
+
 function _M.document()
 
-    local summary = ngx.shared.summary
+    local summary = ngx.shared['summary']
     local uri = ngx.var.uri 
 
     local status_code = ngx.var.status;
