@@ -28,15 +28,15 @@ function _M.run()
         ngx.header.content_type = "application/json"
         ngx.header.charset = "utf-8"
         ngx.say(handle())
-        -- if action == "post /login" then
-        -- -- if action == "post /login" or _M.check_session() == true then
-        --     ngx.say( handle() )
-        --     ngx.exit(200)
-        -- else
-        --     local info = json.encode({["ret"]="failed",["err"]="need login"})
-        --     ngx.say( info )
-        --     ngx.exit(200)
-        -- end
+        if action == "post /login" then
+        -- if action == "post /login" or _M.check_session() == true then
+            ngx.say( handle() )
+            ngx.exit(200)
+        else
+            local info = json.encode({["ret"]="failed",["err"]="need login"})
+            ngx.say( info )
+            ngx.exit(200)
+        end
     elseif string.find(action,"get /dashboard") == 1 then
         ngx.header.content_type = "text/html"
         ngx.header.charset = "utf-8"

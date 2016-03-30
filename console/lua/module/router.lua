@@ -6,8 +6,10 @@
 
 local summary = require "lua.module.summary"
 local status = require "lua.module.status"
-local dd = require "lua.module.dd"
+local login  = require "lua.module.login"
 local json = require "cjson"
+
+local dd = require "lua.module.dd"
 
 local _M = {}
 
@@ -30,6 +32,7 @@ function _M.run()
         ngx.header.charset = "utf-8"
         handle()
     elseif ngx.re.find(action,"(get|post) /dashboard") == 1 then
+        ngx.log(ngx.ERR, "faefagahgafkfjoawejfoi")
         ngx.header.content_type = "text/html"
         ngx.header.charset = "utf-8"
         for k,v in pairs( _M.mime_type ) do
@@ -40,7 +43,7 @@ function _M.run()
         end
 
         local path = _M.root_path .."dashboard" .. string.sub( ngx.var.uri, string.len( "/dashboard") + 1 )
-
+        ngx.log(ngx.ERR, path)
         local f = io.open( path, 'r' )
         if f ~= nil then
             ngx.say( f:read("*all") )
@@ -89,7 +92,7 @@ end
 
 _M.root_path = home_path()
 
-_M.url_route["post /dashboard/login"] = _M.login
+_M.url_route["post /dashboard/login"] = login.login
 
 _M.url_route["post /api/upload_status"] = status.document
 
