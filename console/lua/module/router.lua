@@ -101,6 +101,8 @@ _M.url_route["get /api/edges"] = status.edges
 _M.url_route["get /api/report"] = status.report
 
 _M.url_route["get /api/debug"] = dd.show
+
+_M.url_route["get /api/test"] = login.test
 -- _M.url_route["get /api/fetch_edges"] = summary.fetch_edges
 
 return _M
