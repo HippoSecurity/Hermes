@@ -25,14 +25,11 @@ function _M.run()
 
     local handle = _M.url_route[ action ]
 
-    if handle == nil then
-        return ngx.exit(404)
-    elseif ngx.re.find(action, "(get|post) /api") then
+    if handle ~= nil and ngx.re.find(action, "(get|post) /api") then
         ngx.header.content_type = "application/json"
         ngx.header.charset = "utf-8"
         handle()
     elseif ngx.re.find(action,"(get|post) /dashboard") == 1 then
-        ngx.log(ngx.ERR, "faefagahgafkfjoawejfoi")
         ngx.header.content_type = "text/html"
         ngx.header.charset = "utf-8"
         for k,v in pairs( _M.mime_type ) do
