@@ -40,3 +40,13 @@ logs/access.log
 *.log
 
 console/logs/access.log
+
+logs/nginx.pid
+
+*.log
+
+*.pid
+
+logs/access.log
+
+console/logs/access.log
