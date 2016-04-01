@@ -4,7 +4,9 @@
 -- -- @Link    : 
 -- -- @Disc    : record nginx infomation 
 
-local redis = require "resty.redis"
+local config = require "lua.module.config"
+-- local redis = require "resty.redis"
+local http = require "resty.http"
 
 local ok, new_tab = pcall(require, "table.new")
 if not ok then
@@ -21,8 +23,9 @@ local mt = { __index = _M }
 
 -- rule = [[
 -- [
---     {"act":"url",operate":"≈", "values":"","code":"403"}
---     {"act":"ua", operate":"≈", "value":"", "code" : "403"}  
+--     {"act":"url",operate":"≈", "values":"","code":"403"},
+--     {"act":"ua", operate":"≈", "value":"", "code" : "403"},
+--     {"type":"cc", "value":{"cnt":100, "sec":60}, "code":"403", "block":true, "timeout":0}
 -- ]
 --]]
 
@@ -30,14 +33,20 @@ local KEY_RULE = "M_"
 -- {"type":"cc", "value":{"cnt":100, "sec":60}, "code":"403", "block":true, "timeout":0},
 -- get rules according to ip and uri, if do not match any specified rules,use default one
 function _M.get_rules( ip, uri )
- 
-   local rules = [=[
-        [
-            
-            {"type":"url","operate":"≈", "value":"test1","code":403}
-        ]
-    ]=]
-    return rules
+
+    local httpc = http.new()
+
+    local uri = "http://" .. config.sys_fetch_addr()  .. "/api/fetch_rules?mid=" .. config.sys_fetch_mid()
+
+    local res, err = httpc:request_uri(uri, { method = "GET" })
+
+    if res.status ~= 200 then
+        ngx.log(ngx.WARN, "get not rules!")
+    end
+
+    ngx.log(ngx.ERR, res.body)
+
+    return res.body
 end
 
 

@@ -7,6 +7,7 @@
 local summary = require "lua.module.summary"
 local status = require "lua.module.status"
 local login  = require "lua.module.login"
+local rpm    = require "lua.module.rpm"
 local json = require "cjson"
 
 local dd = require "lua.module.dd"
@@ -24,7 +25,6 @@ function _M.run()
     local action = string.lower(ngx.req.get_method().." "..ngx.var.uri)
 
     local handle = _M.url_route[ action ]
-
     if handle ~= nil and ngx.re.find(action, "(get|post) /api") then
         ngx.header.content_type = "application/json"
         ngx.header.charset = "utf-8"
@@ -40,7 +40,7 @@ function _M.run()
         end
 
         local path = _M.root_path .."dashboard" .. string.sub( ngx.var.uri, string.len( "/dashboard") + 1 )
-        ngx.log(ngx.ERR, path)
+
         local f = io.open( path, 'r' )
         if f ~= nil then
             ngx.say( f:read("*all") )
@@ -91,8 +91,6 @@ _M.root_path = home_path()
 
 _M.url_route["post /dashboard/login"] = login.login
 
-_M.url_route["post /api/upload_status"] = status.document
-
 _M.url_route["get /api/edges"] = status.edges
 
 _M.url_route["get /api/report"] = status.report
@@ -100,6 +98,13 @@ _M.url_route["get /api/report"] = status.report
 _M.url_route["get /api/debug"] = dd.show
 
 _M.url_route["get /api/test"] = login.test
--- _M.url_route["get /api/fetch_edges"] = summary.fetch_edges
+
+-- set rules including add or upgrade
+_M.url_route["post /api/add_rules"] = rpm.add
+
+-- support to edge server
+_M.url_route["post /api/upload_status"] = status.document
+
+_M.url_route["get /api/fetch_rules"] = rpm.fetch
 
 return _M

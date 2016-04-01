@@ -34,3 +34,9 @@ logs/access.log
 logs/nginx.pid
 
 logs/access.log
+
+*.log
+
+*.log
+
+console/logs/access.log

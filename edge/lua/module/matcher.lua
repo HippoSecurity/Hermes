@@ -21,7 +21,7 @@ _M.matcher = {}
 --test_var is a basic test method, used by other test method 
 local function test_var( condition, var )
 
-   local operator = condition['operate']
+   local operator = condition['operator']
    local value =  condition['value']
    
    if operator == "=" then
@@ -173,7 +173,7 @@ function _M.run( self )
     local matcher = _M.matcher
 
     for _, rule in pairs(rules) do
-        if matcher[rule.type](rule) then  -- 这里不设置允许通过的  所以直接执行reject操作
+        if matcher[rule.act](rule) then  -- 这里不设置允许通过的  所以直接执行reject操作
             ngx.exit(tonumber(rule.code))
         end
     end

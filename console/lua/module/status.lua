@@ -38,7 +38,7 @@ function _M.document()
 
     shared_status:set(edge.mid , json.encode(status))
 
-    shared_edges:set( edge.mid, json.encode(edge) )
+    shared_edges:set( edge.mid, json.encode(edge), 30)
 
 end
 
@@ -54,7 +54,7 @@ function _M.edges()
         result[mid] = json.decode(shared_edges:get(mid))
     end
 
-    ngx.say(json.encode(result))
+    ngx.print(json.encode(result))
 end
 
 
@@ -76,7 +76,7 @@ function _M.report()
     -- report['traffic_write'] = shared_status:get( KEY_TRAFFIC_WRITE .. mid)
 
 
-    ngx.say(json.encode( report ))
+    ngx.print(json.encode( report ))
 end
 
 return _M
