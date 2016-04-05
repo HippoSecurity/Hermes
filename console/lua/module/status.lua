@@ -48,13 +48,13 @@ function _M.edges()
 
     local edges = shared_edges:get_keys(0)
 
-    local result = {}
+    local data = {}
 
     for _, mid in pairs(edges) do 
-        result[mid] = json.decode(shared_edges:get(mid))
+        data[mid] = json.decode(shared_edges:get(mid))
     end
 
-    ngx.print(json.encode(result))
+    ngx.say(json.encode({ ret = 'Success', data = data }))
 end
 
 
@@ -76,7 +76,7 @@ function _M.report()
     -- report['traffic_write'] = shared_status:get( KEY_TRAFFIC_WRITE .. mid)
 
 
-    ngx.print(json.encode( report ))
+    ngx.say(report)
 end
 
 return _M
