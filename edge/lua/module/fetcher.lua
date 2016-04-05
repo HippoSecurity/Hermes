@@ -23,8 +23,8 @@ local mt = { __index = _M }
 
 -- rule = [[
 -- [
---     {"act":"url",operate":"≈", "values":"","code":"403"},
---     {"act":"ua", operate":"≈", "value":"", "code" : "403"},
+--     {"act":"url","operate":"≈", "value":"test321","code":"403"},
+--     {"act":"ua", "operate":"≈", "value":"", "code" : "403"},
 --     {"type":"cc", "value":{"cnt":100, "sec":60}, "code":"403", "block":true, "timeout":0}
 -- ]
 --]]

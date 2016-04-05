@@ -4,7 +4,7 @@
 -- -- @Link    : 
 -- -- @Disc    : record nginx infomation 
 
-local json = require "cjson"
+local json = require "lua.module.dkjson"
 
 local _M = {}
 
@@ -75,7 +75,7 @@ local function save()
         end
     end
 
-    local data = json.encode(tmp)
+    local data = json.encode(tmp, {indent=true})
 
     local fd, err = io.open(path, 'w+')
 
