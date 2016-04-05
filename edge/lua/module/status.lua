@@ -53,6 +53,7 @@ function _M.log()
     shared_status:incr( KEY_TRAFFIC_READ, ngx.var.request_length)
     shared_status:incr( KEY_TRAFFIC_WRITE, ngx.var.bytes_sent )
     shared_status:incr( KEY_TIME_TOTAL, ngx.var.request_time )
+    ngx.log(ngx.ERR, "are you coming to the tree")
 end
 
 function _M.report()
@@ -60,14 +61,14 @@ function _M.report()
     local var = ngx.var
 
     local report = {}
-    report['request_all_count'] = shared_status:get( KEY_TOTAL_COUNT )
-    report['request_success_count'] = shared_status:get( KEY_TOTAL_COUNT_SUCCESS )
+    report['total_cnt'] = shared_status:get( KEY_TOTAL_COUNT )
+    report['suc_cnt'] = shared_status:get( KEY_TOTAL_COUNT_SUCCESS )
     report['time'] = ngx.now()
-    report['response_time_total'] = shared_status:get( KEY_TIME_TOTAL )
+    report['resp_time'] = shared_status:get( KEY_TIME_TOTAL )
     
-    report['traffic_read'] = shared_status:get( KEY_TRAFFIC_READ )
-    report['traffic_write'] = shared_status:get( KEY_TRAFFIC_WRITE )
-    return json.encode( report )
+    report['t_read'] = shared_status:get( KEY_TRAFFIC_READ )
+    report['t_write'] = shared_status:get( KEY_TRAFFIC_WRITE )
+    return report
 
 end
 

@@ -10,14 +10,14 @@ local function upload_status( premature )
 
     local httpc = http.new()
 
-    local data = {status=status.report()} -- may get from status
     local uri = "http://" .. config.sys_fetch_addr()  .. "/api/upload_status"
 
     local res, err = httpc:request_uri(uri, {
             method = "POST",
-            body = json.encode({mid=config.sys_fetch_mid(), time=ngx.time(), name=config.sys_fetch_name(), data=data})
+            body = json.encode({mid=config.sys_fetch_mid(), time=ngx.time(), name=config.sys_fetch_name(), status=status.report()})
         })
 
+    ngx.log(ngx.ERR, json.encode({mid=config.sys_fetch_mid(), time=ngx.time(), name=config.sys_fetch_name(), status=status.report()}))
     if res.status ~= 200 then
         ngx.log(ngx.WARN, "get unexpected status code: ", res.status, "err: ", err)
     end

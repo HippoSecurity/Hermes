@@ -20,7 +20,12 @@ local function process_edge_info()
 
     local edge = { mid = body_json.mid, name = body_json.name, ip = ngx.var.remote_addr }
 
-    return edge, body_json.data
+    if not body_json.status then
+        ngx.log(ngx.WARN, "bad request from mid = ", body_json.mid or "")
+        return ngx.exit(400)
+    end
+
+    return edge, body_json.status or {}
 end
 
 --add global count info
@@ -32,8 +37,11 @@ function _M.document()
     local status = {
         t_cnt     = data.total_cnt or 0,
         s_cnt     = data.suc_cnt or 0,
-        req_len   = data.avg_request_length or 0,
-        bytes_sent= data.avg_bytes_sent or 0,
+        resp_time = data.resp_time or 0,
+        t_rd      = data.t_read or 0,
+        t_wr      = data.t_write or 0,
+        -- req_len   = data.avg_request_length or 0,
+        -- bytes_sent= data.avg_bytes_sent or 0,
     }
 
     shared_status:set(edge.mid , json.encode(status))
