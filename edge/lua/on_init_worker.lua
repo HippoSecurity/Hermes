@@ -11,19 +11,20 @@ local function upload_status( premature )
     local httpc = http.new()
 
     local data = {status=status.report()} -- may get from status
+    local uri = "http://" .. config.sys_fetch_addr()  .. "/api/upload_status"
 
-    local res, err = httpc:request_uri("http://" .. config.sys_fetch_addr() or "127.0.0.1:80" .. "/api/upload_status", {
+    local res, err = httpc:request_uri(uri, {
             method = "POST",
             body = json.encode({mid=config.sys_fetch_mid(), time=ngx.time(), name=config.sys_fetch_name(), data=data})
         })
 
     if res.status ~= 200 then
-        ngx.log(ngx.WARNING, "get unexpected status code: ", res.status, "err: ", err)
+        ngx.log(ngx.WARN, "get unexpected status code: ", res.status, "err: ", err)
     end
 
     ngx.timer.at(5, upload_status)
 end
 
 if 0 == ngx.worker.id() then   -- first worker
-    ngx.timer.at(0, upload_status)
+    ngx.timer.at(5, upload_status)
 end
