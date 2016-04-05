@@ -54,7 +54,7 @@ function _M.edges()
         data[mid] = json.decode(shared_edges:get(mid))
     end
 
-    ngx.say(json.encode({ ret = 'Success', data = data }))
+    ngx.say(json.encode({ ret = 'success', data = data }))
 end
 
 
