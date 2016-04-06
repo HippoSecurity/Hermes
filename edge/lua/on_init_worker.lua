@@ -10,7 +10,7 @@ local function upload_status( premature )
 
     local httpc = http.new()
 
-    local uri = "http://" .. config.sys_fetch_addr()  .. "/api/upload_status"
+    local uri = "http://" .. config.sys_fetch_addr()  .. "/dashboard/upload_status"
 
     local res, err = httpc:request_uri(uri, {
             method = "POST",

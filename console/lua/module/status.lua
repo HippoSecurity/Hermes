@@ -22,7 +22,6 @@ local function process_edge_info()
 
     if not body_json.status then
         ngx.log(ngx.WARN, "bad request from mid = ", body_json.mid or "")
-        return ngx.exit(400)
     end
 
     return edge, body_json.status or {}
@@ -48,6 +47,8 @@ function _M.document()
 
     shared_edges:set( edge.mid, json.encode(edge), 30)
 
+    ngx.say("OK")
+
 end
 
 function _M.edges()
@@ -59,7 +60,8 @@ function _M.edges()
     local data = {}
 
     for _, mid in pairs(edges) do 
-        data[mid] = json.decode(shared_edges:get(mid))
+        table.insert(data, json.decode(shared_edges:get(mid)))
+        -- data[mid] = json.decode(shared_edges:get(mid))
     end
 
     ngx.say(json.encode({ ret = 'success', data = data }))

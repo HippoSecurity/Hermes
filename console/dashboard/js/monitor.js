@@ -1,6 +1,6 @@
 var monitor = new Object();
 
-monitor.chart_size = 17;
+monitor.chart_size = 12;
 
 monitor.refresh_timer = null;
 
@@ -228,11 +228,12 @@ monitor.animation_enable = function(){
 monitor.refresh = function(){
     //console.log("monitor refresh");
 
-    $.get("./status",function(data,status){
+    $.get("./report?mid=" + $("#def_btn").text() ,function(data,status){
         if( status != 'success' ){
             return;
         }
 
+        console.log($("#def_btn").text());
         //console.log('status:',status);
         //console.log('data:',data);
         if( monitor.latest_status != null ){
