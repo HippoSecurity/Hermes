@@ -9,6 +9,8 @@ monitor.chart_connection = null;
 
 monitor.latest_status = null;
 
+monitor.fetch_mid = null;
+
 monitor.time_str = function(){
     var time_str = (new Date()).toTimeString();
     return time_str.split(' ')[0];
@@ -225,47 +227,52 @@ monitor.animation_enable = function(){
     monitor.chart_traffic.options['animation'] = true;
 }
 
-monitor.refresh = function(){
-    //console.log("monitor refresh");
+monitor.set_mid = function (mid) {
+    monitor.fetch_mid = mid;
+}
 
-    $.get("./report?mid=" + $("#def_btn").text() ,function(data,status){
+monitor.refresh = function(){
+    if (!monitor.fetch_mid) {
+        return;
+    }
+
+    $.get("./report?mid=" + monitor.fetch_mid ,function(data,status){
         if( status != 'success' ){
             return;
         }
 
-        console.log($("#def_btn").text());
-        //console.log('status:',status);
-        //console.log('data:',data);
+        // {"s_cnt":0,"resp_time":0.067,"t_rd":818,"t_wr":3650,"time":1459935312,"t_cnt":10}
+        var data = $.parseJSON(data);
         if( monitor.latest_status != null ){
             var time_change = data['time'] - monitor.latest_status['time'];
-            //console.log('time_change',time_change);
             if(time_change == 0 ){
                 return;
             }
+            
+            var requests_all_change = data['t_cnt'] - monitor.latest_status['t_cnt']; 
+            var requests_success_change = data['s_cnt'] - monitor.latest_status['s_cnt'];
 
-            var requests_all_change = data['request_all_count'] - monitor.latest_status['request_all_count']; 
-            var requests_success_change = data['request_success_count'] - monitor.latest_status['request_success_count'];
-            var connections_active = data['connections_active'];
-            var connections_reading = data['connections_reading'];
-            var connections_writing = data['connections_writing'];
+            // var connections_active = data['connections_active'];
+            // var connections_reading = data['connections_reading'];
+            // var connections_writing = data['connections_writing'];
             var avg_request_all = requests_all_change / time_change;
             var avg_request_success = requests_success_change / time_change;
             var time_str = monitor.time_str();
             var sub_label = '';
-            var response_time_change = data['response_time_total'] - monitor.latest_status['response_time_total'];
+            var response_time_change = data['resp_time'] - monitor.latest_status['resp_time'];
             var avg_response_time = 0;
             if( requests_all_change != 0 ){
                 avg_response_time = 1000 * response_time_change / requests_all_change ;
             }
-            
-            var traffic_read_change = data['traffic_read'] - monitor.latest_status['traffic_read'];
-            var traffic_write_change = data['traffic_write'] - monitor.latest_status['traffic_write'];
+
+            var traffic_read_change = data['t_rd'] - monitor.latest_status['t_rd'];
+            var traffic_write_change = data['t_wr'] - monitor.latest_status['t_wr'];
             
             var avg_traffic_read = traffic_read_change / (time_change*1024);
             var avg_traffic_write = traffic_write_change / (time_change*1024);
             
             monitor.chart_request.addData([avg_request_all,avg_request_success], time_str);
-            monitor.chart_connection.addData( [ connections_active,connections_writing,connections_reading ], sub_label )
+            // monitor.chart_connection.addData( [ connections_active,connections_writing,connections_reading ], sub_label )
             monitor.chart_response_time.addData( [ avg_response_time ], sub_label )
             monitor.chart_traffic.addData( [ avg_traffic_read, avg_traffic_write ], sub_label )
 
@@ -287,6 +294,27 @@ monitor.refresh = function(){
         }
         monitor.latest_status = data;
     });
+}
+
+
+monitor.clear = function () {
+    monitor.latest_status = null;
+
+    while( monitor.chart_request.datasets[0].points.length != 0 ){
+        monitor.chart_request.removeData();
+    }
+    
+    while( monitor.chart_connection.datasets[0].points.length != 0 ){
+        monitor.chart_connection.removeData();
+    }
+    
+    while( monitor.chart_response_time.datasets[0].points.length != 0 ){
+        monitor.chart_response_time.removeData();
+    }
+    
+    while( monitor.chart_traffic.datasets[0].points.length != 0 ){
+        monitor.chart_traffic.removeData();
+    }
 }
 
 monitor.update_config =function(){

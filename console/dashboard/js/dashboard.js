@@ -75,7 +75,7 @@ dashboard.login = function(user,password){
 
             dashboard.switch_to_interface('dashboard');
             config.get_config();
-            edges_stat.refresh();
+            edges_stat.start();
             dashboard.notify("Login Success");
             window.setTimeout( monitor.build_chart, 0 );
             window.setTimeout( monitor.start, 0 );

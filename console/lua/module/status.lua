@@ -20,11 +20,14 @@ local function process_edge_info()
 
     local edge = { mid = body_json.mid, name = body_json.name, ip = ngx.var.remote_addr }
 
+    local time = body_json.time
+
     if not body_json.status then
         ngx.log(ngx.WARN, "bad request from mid = ", body_json.mid or "")
+        return edge, {}
     end
 
-    return edge, body_json.status or {}
+    return edge, body_json.status 
 end
 
 --add global count info
@@ -39,6 +42,7 @@ function _M.document()
         resp_time = data.resp_time or 0,
         t_rd      = data.t_read or 0,
         t_wr      = data.t_write or 0,
+        time      = data.time
         -- req_len   = data.avg_request_length or 0,
         -- bytes_sent= data.avg_bytes_sent or 0,
     }

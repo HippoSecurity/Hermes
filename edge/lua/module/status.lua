@@ -68,6 +68,7 @@ function _M.report()
     
     report['t_read'] = shared_status:get( KEY_TRAFFIC_READ )
     report['t_write'] = shared_status:get( KEY_TRAFFIC_WRITE )
+    report['time'] = ngx.time()
     return report
 
 end
