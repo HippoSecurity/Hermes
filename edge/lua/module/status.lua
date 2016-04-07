@@ -53,7 +53,6 @@ function _M.log()
     shared_status:incr( KEY_TRAFFIC_READ, ngx.var.request_length)
     shared_status:incr( KEY_TRAFFIC_WRITE, ngx.var.bytes_sent )
     shared_status:incr( KEY_TIME_TOTAL, ngx.var.request_time )
-    ngx.log(ngx.ERR, "are you coming to the tree")
 end
 
 function _M.report()

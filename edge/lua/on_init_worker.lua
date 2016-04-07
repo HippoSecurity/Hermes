@@ -17,8 +17,9 @@ local function upload_status( premature )
             body = json.encode({mid=config.sys_fetch_mid(), name=config.sys_fetch_name(), status=status.report()})
         })
 
-    ngx.log(ngx.ERR, json.encode({mid=config.sys_fetch_mid(), name=config.sys_fetch_name(), status=status.report()}))
-    if res.status ~= 200 then
+    if not res then
+        ngx.log(ngx.WARN, "get nil from remote console, uri = ", uri)
+    elseif res.status ~= 200 then
         ngx.log(ngx.WARN, "get unexpected status code: ", res.status, "err: ", err)
     end
 

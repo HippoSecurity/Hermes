@@ -25,7 +25,7 @@ local mt = { __index = _M }
 -- [
 --     {"act":"url","operate":"≈", "value":"test321","code":"403"},
 --     {"act":"ua", "operate":"≈", "value":"", "code" : "403"},
---     {"type":"cc", "value":{"cnt":100, "sec":60}, "code":"403", "block":true, "timeout":0}
+--     {"act":"cc", "value":{"cnt":100, "sec":60}, "code":"403", "block":true, "timeout":0}
 -- ]
 --]]
 
@@ -36,15 +36,13 @@ function _M.get_rules( ip, uri )
 
     local httpc = http.new()
 
-    local uri = "http://" .. config.sys_fetch_addr()  .. "/api/fetch_rules?mid=" .. config.sys_fetch_mid()
+    local uri = "http://" .. config.sys_fetch_addr()  .. "/dashboard/fetch_rules?mid=" .. config.sys_fetch_mid()
 
     local res, err = httpc:request_uri(uri, { method = "GET" })
 
     if res.status ~= 200 then
         ngx.log(ngx.WARN, "get not rules!")
     end
-
-    ngx.log(ngx.ERR, res.body)
 
     return res.body
 end

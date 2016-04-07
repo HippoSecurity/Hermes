@@ -56,7 +56,7 @@ edges_stat.refresh = function () {
                 // console.log(data);
                 if (edges_stat.current_nodeid == data.nodeId) 
                 {
-                    aler("12");
+                    aler("123");
                     $('#edges_tree').treeview('selectNode', [ edges_stat.current_nodeid, { silent: true } ]);
                 }
                 

@@ -51,12 +51,20 @@ _M.url_route["get /dashboard/debug"] = dd.show
 
 _M.url_route["get /dashboard/test"] = accounts.test
 
--- set rules including add or upgrade
-_M.url_route["post /dashboard/add_rules"] = rpm.add
-
 -- support to edge server
 _M.url_route["post /dashboard/upload_status"] = status.document
 
+-- set rules including add or upgrade
+_M.url_route["post /dashboard/set_rules"] = rpm.set
+
+_M.url_route["post /dashboard/del_rules"] = rpm.del
+
 _M.url_route["get /dashboard/fetch_rules"] = rpm.fetch
+
+_M.url_route["post /dashboard/union_add"] = rpm.union_add
+
+_M.url_route["post /dashboard/union_del"] = rpm.union_del
+
+_M.url_route["get /dashboard/union_rules"] = rpm.union_fetch
 
 return _M

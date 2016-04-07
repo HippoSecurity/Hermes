@@ -112,6 +112,7 @@ dashboard.switch_to_page = function( page ){
     $(".page").hide();
     $("#page_"+page).show();
 
+    console.log($("#page_"+page));
     $(".topnav").removeClass("active");
     $("#topnav_"+page).addClass("active");
 

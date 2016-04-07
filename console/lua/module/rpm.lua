@@ -4,10 +4,14 @@
 -- -- @Link    : 
 -- -- @Disc    : record nginx infomation 
 
-local json = require "lua.module.dkjson"
+local dkjson = require "lua.module.dkjson"
+local json = require "cjson"
 
 local _M = {}
 
+local KEY_ALL = "A_"
+
+local KEY_UNION = "U_"
 
 local function merge_table( to, from )
     -- body
@@ -75,7 +79,7 @@ local function save()
         end
     end
 
-    local data = json.encode(tmp, {indent=true})
+    local data = dkjson.encode(tmp, {indent=true})
 
     local fd, err = io.open(path, 'w+')
 
@@ -93,6 +97,7 @@ function _M.init()
     -- fetch from storage first, like local file
     local rules_cache = ngx.shared.c_rules
 
+    -- get rules
     local path = ngx.config.prefix() .. "conf/rules"
 
     local fd, err = io.open(path, 'r')
@@ -111,9 +116,27 @@ function _M.init()
         rules_cache:set(key, json.encode(value))
     end
 
+    -- get union
+    path = ngx.config.prefix() .. "conf/union"
+    data = nil
+
+    fd, err = io.open(path, 'r')
+
+    if fd then
+        data = fd:read("*all")
+        fd:close()
+    else
+        return ngx.log(ngx.ERR, "open config file err: ", err)
+    end
+
+    if string.len(data) ~= 0 then
+        rules_cache:set(KEY_UNION, data)
+    end
+
 end
 
 
+-- 提供给终端获取策略的接口
 function _M.fetch()
     --body
     local mid = ngx.var.arg_mid
@@ -131,7 +154,7 @@ function _M.fetch()
     end
 
     -- policy on all edge-servers
-    local rules_accord_default = rules_cache:get("all")
+    local rules_accord_default = rules_cache:get(KEY_ALL .. "all")
 
     if rules_accord_default then
         merge_table(result, json.decode(rules_accord_default))
@@ -141,8 +164,8 @@ function _M.fetch()
 
 end
 
-
-function _M.add()
+-- 向某个mid 或者 all 添加一条策略
+function _M.set()
     -- body  
     local mid = ngx.var.arg_mid
 
@@ -166,7 +189,93 @@ function _M.add()
 
     save()
 
+    return ngx.exit(200)
 end
+
+
+-- 为了简单 直接重写
+function _M.rewrite()
+    -- body  
+    local mid = ngx.var.arg_mid
+
+    if not mid then return ngx.exit(400) end
+
+    local rules_cache = ngx.shared.c_rules
+
+    ngx.req.read_body()
+
+    rules_cache:set(mid, ngx.var.request_body)
+
+    save()
+
+    return ngx.exit(200)
+end
+
+
+local function union_save( data )
+    -- body
+    local path = ngx.config.prefix() .. "conf/union"
+
+    local fd, err = io.open(path, 'w+')
+
+    if fd then
+        fd:write(data)
+        fd:close()
+    else
+        return ngx.log(ngx.ERR, "write config file err: ", err)
+    end
+
+end
+
+
+function _M.union_add()
+    -- body
+    local rules_cache = ngx.shared.c_rules
+
+    ngx.req.read_body()
+
+    local cur_rules, flag = rules_cache:get(KEY_UNION)
+
+    local tmp = json.decode(cur_rules or "{}")
+
+    table.insert(tmp, json.decode(ngx.var.request_body))
+
+    local union_rules = dkjson.encode(tmp, {indent=true})
+
+    rules_cache:set(KEY_UNION, union_rules)
+
+    union_save(union_rules)
+
+    return ngx.exit(200)
+end
+
+
+function _M.union_rewrite()
+    -- body
+    local rules_cache = ngx.shared.c_rules
+
+    ngx.req.read_body()
+
+    local tmp = ngx.var.request_body
+
+    rules_cache:set(KEY_UNION, tmp)
+
+    union_save(tmp)
+
+    return ngx.exit(200)
+end
+
+
+function _M.union_fetch()
+    -- body
+    local rules_cache = ngx.shared.c_rules
+
+    local union_rules, _ = rules_cache:get(KEY_UNION)
+
+    ngx.say(union_rules or '[]') 
+
+end
+
 
 return _M
 
