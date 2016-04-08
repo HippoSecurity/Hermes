@@ -39,22 +39,22 @@ config.refresh_bottom_bar = function(){
 };
 
 config.get_config = function(){
-    $.get("./config",function(data,status){
-        config.verynginx_config = data;
-        config.original_config_json = JSON.stringify( config.verynginx_config , null, 2);
+    $.get("./union_rules",function(data,status){
+        config.hermes_config = data;
+        config.original_config_json = JSON.stringify( config.hermes_config , null, 2);
             
         if( config.config_vm != null ){
-            config.config_vm.$data = config.verynginx_config;
+            config.config_vm.$data = config.hermes_config;
             dashboard.notify("Reread config success");
             return;
         }
 
         config.config_vm = new Vue({
-            el: '#verynginx_config',
-            data: config.verynginx_config,
+            el: '#hermes_config',
+            data: config.hermes_config,
             computed : {
                 all_config_json: function(){
-                    return JSON.stringify( config.verynginx_config , null, 2);
+                    return JSON.stringify( config.hermes_config , null, 2);
                 }
             }
         });
@@ -166,12 +166,16 @@ config.config_matcher_add = function(){
         return;
     }
 
-    if( config.verynginx_config['matcher'][matcher_name] != null ){
+    console.log(config.hermes_config);
+    
+    if( config.hermes_config['matcher'][matcher_name] != null ){
         dashboard.notify('Matcher [' + matcher_name + '] already existed');
         return;
     }
 
-    Vue.set( config.verynginx_config['matcher'], matcher_name ,matcher_editor.tmp_conditions );
+    console.log(matcher_name, matcher_editor.tmp_conditions);
+
+    Vue.set( config.hermes_config['matcher'], matcher_name ,matcher_editor.tmp_conditions );
 
     matcher_editor.clean();
 }

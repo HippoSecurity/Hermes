@@ -208,7 +208,7 @@
                             </div>
                         </div>
                     </div>  
-                    <div class="col-sm-8" id="verynginx_config">
+                    <div class="col-sm-8" id="hermes_config">
                         <div class="config_container" id="config_basic_matcher">
                             <div class="config_title">
                                 Request Matcher
@@ -255,16 +255,17 @@
                                 <div class="form-group" id="verynginx_matcher_editor" >
                                     <label class="col-sm-2 control-label">Conditions</label>
                                     <div class="col-sm-10">
-                                        <div style="border-style:solid;border-width:1px;border-color:#CCC;border-radius:5px;margin-bottom:5px;min-height:32px">
+                                        <div style="border-style:solid;border-width:1px;border-color:#CCC;border-radius:5px;margin-bottom:5px;min-height:32px" onclick="matcher_editor.modal_condition_open()">
                                             <condition v-bind:matcher_conditions="conditions" del_action="matcher_editor.tmp_conditions_delete(this)"></condition>
                                         </div>
-                                        <button type="button" class="btn btn-default btn-xs" onclick="matcher_editor.modal_condition_open()">New Condition</button>
                                     </div>
                                 </div>
                                 
                                 <div class="form-group">
                                     <div class="col-sm-offset-2 col-sm-10">
-                                        <button class="btn btn-default"  onclick="config.config_matcher_add()">Add</button>
+                                        <button class="btn btn-default pull-right"  onclick="config.config_matcher_add()">
+                                            Add
+                                        </button>
                                     </div>
                                 </div>
                             </form>
@@ -1089,30 +1090,6 @@
                                 </div>
                             </form>
                         </div>
-                    </div>
-
-                    <div class="col-sm-2" id="verynginx_tips">
-                        <template v-for="tip in tips">
-                            <div class="tips_container"  onclick="tips.toggle(this)">
-                                <div class="tips_tips">
-                                    {{tip.tips}} 
-                                </div>
-                                
-                                <div class="tips_content collapse">
-                                    <template  v-if="(typeof tip.content == 'string')">
-                                        {{ tip.content }}
-                                    </template>
-                                    
-                                    <template  v-if="(typeof tip.content == 'object')">
-                                        <ul>
-                                            <template  v-for="row in tip.content ">
-                                                <li> {{row}} </li>
-                                            </template>
-                                        </ul>
-                                    </template>
-                                </div>
-                            </div>
-                        </template>
                     </div>
                 </div>
 
