@@ -98,7 +98,7 @@ function _M.init()
     local rules_cache = ngx.shared.c_rules
 
     -- get rules
-    local path = ngx.config.prefix() .. "conf/rules"
+    local path = ngx.config.prefix() .. "conf/config"
 
     local fd, err = io.open(path, 'r')
     local data = nil
@@ -117,7 +117,7 @@ function _M.init()
     end
 
     -- get union
-    path = ngx.config.prefix() .. "conf/union"
+    path = ngx.config.prefix() .. "conf/config"
     data = nil
 
     fd, err = io.open(path, 'r')
@@ -236,11 +236,15 @@ function _M.union_add()
 
     local cur_rules, flag = rules_cache:get(KEY_UNION)
 
+    ngx.log(ngx.ERR, cur_rules)
+
     local tmp = json.decode(cur_rules or "{}")
 
     table.insert(tmp, json.decode(ngx.var.request_body))
 
     local union_rules = dkjson.encode(tmp, {indent=true})
+
+    ngx.log(ngx.ERR, union_rules)
 
     rules_cache:set(KEY_UNION, union_rules)
 

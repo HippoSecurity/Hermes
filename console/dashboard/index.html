@@ -187,17 +187,9 @@
                         <div style="border-right: 1px solid #eee;margin-left:auto; margin-right:auto;">
                             <div class="leftnav leftnav_1 init_click" group="basic" onclick="dashboard.switch_config_nav_group(this)">Basic</div>
                             <div class="leftnav_group" group="basic">
-                                <div class="leftnav leftnav_2 " config_name="basic_matcher" onclick="dashboard.switch_to_config(this)">Matcher</div>
+                                <div class="leftnav leftnav_2 " config_name="basic_matcher" onclick="dashboard.switch_to_config(this)">Rules</div>
                             </div>
-                            <div class="leftnav leftnav_1" group="action" onclick="dashboard.switch_config_nav_group(this)">Custom Action</div>
-                            <div class="leftnav_group" group="action">
-                                <div class="leftnav leftnav_2" config_name="action_scheme_lock" onclick="dashboard.switch_to_config(this)">Scheme Lock</div>
-                                <div class="leftnav leftnav_2" config_name="action_redirect" onclick="dashboard.switch_to_config(this)">Redirect</div>
-                                <div class="leftnav leftnav_2" config_name="action_uri_rewrite" onclick="dashboard.switch_to_config(this)">URI Rewrite</div>
-                                <div class="leftnav leftnav_2" config_name="action_browser_verify" onclick="dashboard.switch_to_config(this)">Browser Verify</div>
-                                <div class="leftnav leftnav_2" config_name="action_filter" onclick="dashboard.switch_to_config(this)">Filter</div>
-                            </div>
-                            <div class="leftnav leftnav_1" group="summary" onclick="dashboard.switch_config_nav_group(this)">Summary</div>
+                            
                             <div class="leftnav_group" group="summary">
                                 <div class="leftnav leftnav_2" config_name="summary_request" onclick="dashboard.switch_to_config(this)">Request Summary</div>
                             </div>
@@ -219,7 +211,7 @@
                                         <td>#</td>
                                         <td>Name</td>
                                         <td>Condition</td>
-                                        <td></td>
+                                        <td>Action</td>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -251,7 +243,7 @@
                                         <input class="form-control" id="config_matcher_editor_name" name="name" type="text" placeholder="Name of the matcher">
                                     </div>
                                 </div>
-                                
+
                                 <div class="form-group" id="verynginx_matcher_editor" >
                                     <label class="col-sm-2 control-label">Conditions</label>
                                     <div class="col-sm-10">
@@ -263,8 +255,11 @@
                                 
                                 <div class="form-group">
                                     <div class="col-sm-offset-2 col-sm-10">
-                                        <button class="btn btn-default pull-right"  onclick="config.config_matcher_add()">
+                                        <button class="btn btn-default"  onclick="config.config_matcher_add()">
                                             Add
+                                        </button>
+                                        <button class="btn btn-default "  onclick="config.config_matcher_save()">
+                                            Save
                                         </button>
                                     </div>
                                 </div>
@@ -1120,8 +1115,8 @@
                             <div class="modal-body" >
 
                                 <form class="form-horizontal">
-                                    <div class="row vn_modal_row"   >
-                                        <label class="col-sm-2 text-right control-label">Type</label>
+                                    <div class="row vn_modal_row">
+                                        <label class="col-sm-2 text-right control-label">type</label>
                                         <div class="col-sm-10">
                                             <select class="form-control" name="condition_type" onchange="matcher_editor.modal_condition_switch_input()">
                                                 <option value="URI">URI</option>

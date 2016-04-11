@@ -2,7 +2,7 @@ var config = new Object();
 
 Vue.config.debug = true;
 config.config_vm = null; 
-config.verynginx_config = {};
+config.hermes_config = {};
 
 config.original_config_json = null;
 
@@ -40,9 +40,18 @@ config.refresh_bottom_bar = function(){
 
 config.get_config = function(){
     $.get("./union_rules",function(data,status){
-        config.hermes_config = data;
-        config.original_config_json = JSON.stringify( config.hermes_config , null, 2);
-            
+        config.hermes_config = JSON.parse(data);
+        config.original_config_json = data;
+
+        console.log(config.hermes_config['matcher']);
+
+        if (config.hermes_config['matcher'] == undefined) {
+            Vue.set( config.hermes_config, "matcher" , {} );
+        }
+
+
+        console.log(config.hermes_config['matcher']);
+
         if( config.config_vm != null ){
             config.config_vm.$data = config.hermes_config;
             dashboard.notify("Reread config success");
@@ -65,7 +74,7 @@ config.get_config = function(){
 
 //add a config
 config.config_add = function(rule_group_name,value){
-    config.verynginx_config[rule_group_name].push(value);
+    config.hermes_config[rule_group_name].push(value);
 }
 
 //modify a config
@@ -75,12 +84,12 @@ config.config_mod = function(rule_group_name,index,value){
     //console.log('-->',rule_group_name,index,value);
     if( value == null ){
         if( typeof index == 'string' ){
-            Vue.delete( config.verynginx_config[rule_group_name], index );
+            Vue.delete( config.hermes_config[rule_group_name], index );
         }else{
-            config.verynginx_config[rule_group_name].splice( index, 1 );
+            config.hermes_config[rule_group_name].splice( index, 1 );
         }
     }else{
-        config.verynginx_config[rule_group_name].$set( index, value );
+        config.hermes_config[rule_group_name].$set( index, value );
     }
 }
 
@@ -88,11 +97,11 @@ config.config_mod = function(rule_group_name,index,value){
 //index: the config index(key) in the config group
 config.save_form_data = function( rule_group_name,value ){
 
-    var editing = config.verynginx_config[rule_group_name]._editing;
+    var editing = config.hermes_config[rule_group_name]._editing;
     if( editing == undefined ){
         config.config_add( rule_group_name, value );
     }else{
-        config.verynginx_config[rule_group_name]._editing = null;
+        config.hermes_config[rule_group_name]._editing = null;
         config.config_mod( rule_group_name,editing,value ) 
     }
 }
@@ -101,7 +110,7 @@ config.save_form_data = function( rule_group_name,value ){
 config.config_edit_begin = function( rule_group_name, index, form_id ){
     
     console.log('config.config_edit:',rule_group_name,index,form_id)
-    var config_group = config.verynginx_config[ rule_group_name ];
+    var config_group = config.hermes_config[ rule_group_name ];
     config_group = JSON.parse( JSON.stringify(config_group) );
     
     Object.defineProperty( config_group , "_editing", { value : index, enumerable:false, writable:true });
@@ -116,7 +125,7 @@ config.config_edit_begin = function( rule_group_name, index, form_id ){
 
 config.config_edit_cacel = function( rule_group_name ){
     
-    var config_group = config.verynginx_config[ rule_group_name ];
+    var config_group = config.hermes_config[ rule_group_name ];
     //use json and parse to clean "_editing" property
     config_group = JSON.parse( JSON.stringify(config_group) );
     //reset data to refresh the view
@@ -131,25 +140,25 @@ config.config_move_up = function(rule_group_name,index){
         return;
     }
 
-    var tmp = config.verynginx_config[rule_group_name][index-1];
-    config.verynginx_config[rule_group_name].$set(index-1, config.verynginx_config[rule_group_name][index]);
-    config.verynginx_config[rule_group_name].$set(index, tmp);
+    var tmp = config.hermes_config[rule_group_name][index-1];
+    config.hermes_config[rule_group_name].$set(index-1, config.hermes_config[rule_group_name][index]);
+    config.hermes_config[rule_group_name].$set(index, tmp);
 }
 
 config.config_move_down = function(rule_group_name,index){
-    if(index >= config.verynginx_config[rule_group_name].length - 1){
+    if(index >= config.hermes_config[rule_group_name].length - 1){
         dashboard.notify("The item already at the bottom");
         return;
     }
     
-    var tmp = config.verynginx_config[rule_group_name][index+1];
-    config.verynginx_config[rule_group_name].$set(index+1, config.verynginx_config[rule_group_name][index]);
-    config.verynginx_config[rule_group_name].$set(index, tmp);
+    var tmp = config.hermes_config[rule_group_name][index+1];
+    config.hermes_config[rule_group_name].$set(index+1, config.hermes_config[rule_group_name][index]);
+    config.hermes_config[rule_group_name].$set(index, tmp);
 }
 
 //for matcher only
 config.config_matcher_delete_condition = function( matcher_name, condition_name ){
-    Vue.delete( config.verynginx_config['matcher'][matcher_name], condition_name  );
+    Vue.delete( config.hermes_config['matcher'][matcher_name], condition_name  );
 }
 
 //add the content of matcher editor to global config
@@ -166,14 +175,10 @@ config.config_matcher_add = function(){
         return;
     }
 
-    console.log(config.hermes_config);
-    
     if( config.hermes_config['matcher'][matcher_name] != null ){
         dashboard.notify('Matcher [' + matcher_name + '] already existed');
         return;
     }
-
-    console.log(matcher_name, matcher_editor.tmp_conditions);
 
     Vue.set( config.hermes_config['matcher'], matcher_name ,matcher_editor.tmp_conditions );
 
@@ -182,7 +187,7 @@ config.config_matcher_add = function(){
 
 config.save_config = function(){
     console.log("save_config");
-    var config_json = JSON.stringify( config.verynginx_config , null, 2);
+    var config_json = JSON.stringify( config.hermes_config , null, 2);
 
     //step 1, use encodeURIComponent to escape special char 
     var config_json_escaped = window.encodeURIComponent( config_json );
