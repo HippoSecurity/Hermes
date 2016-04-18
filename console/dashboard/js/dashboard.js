@@ -65,7 +65,8 @@ dashboard.init = function(){
 
 dashboard.login = function(user,password){
     console.log("login with:",user,password);
-    $.post("./login",data={user:user,password:password},function(data,status){
+    $.post("./login", {user:user,password:password},function(data,status){
+        data = JSON.parse(data);
         if( data['ret'] == "success" ){
             var uri = document.location.pathname;
             var path = uri.substring(0, uri.lastIndexOf('/') );
@@ -74,6 +75,7 @@ dashboard.login = function(user,password){
 
             dashboard.switch_to_interface('dashboard');
             config.get_config();
+            edges_stat.start();
             dashboard.notify("Login Success");
             window.setTimeout( monitor.build_chart, 0 );
             window.setTimeout( monitor.start, 0 );
@@ -110,6 +112,7 @@ dashboard.switch_to_page = function( page ){
     $(".page").hide();
     $("#page_"+page).show();
 
+    console.log($("#page_"+page));
     $(".topnav").removeClass("active");
     $("#topnav_"+page).addClass("active");
 

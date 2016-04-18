@@ -9,6 +9,15 @@ data_stat.search = function( s ){
     data_stat.url_table.search( s ).draw();
 }
 
+$('.form-control').on('change', function() {
+    console.log(this.value);
+})
+
+data_stat.test = function () {
+    $("#t12").html("<option>abc</option>");
+}
+
+
 data_stat.tab_switch = function ( item ) {
     // 标签切换文字变化
     if( $(item).attr('id') == 'summary_data_all' ){
@@ -26,6 +35,20 @@ data_stat.make_sure_have_table = function(){
         data_stat.get_data();
     }
 }
+
+
+data_stat.edge_switch = function ( item ) {
+    // 标签切换文字变化
+    if( $(item).attr('id') == 'test' ){
+        $("#def_btn").html($(item).text() + "<span class=\"caret\"></span>");
+    }else{
+        $("#def_btn").html("Temporary<span class=\"caret\"></span>");
+    } 
+    
+    data_stat.get_data();
+}
+
+// data_stat.get_status
 
 
 data_stat.get_data = function () {

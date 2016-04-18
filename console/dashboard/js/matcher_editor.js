@@ -24,7 +24,23 @@ matcher_editor.condition_input_meta = {
             'name':'value',
             'type':'textarea',
             'placeholder':'If operator is "is Null", this field will be ignored',
+        },
+        {
+            'name':'action',
+            'type':'select',
+            'options':{
+                'Block':"Block",
+                'Accept':"Accept",
+            }
+        },
+        {
+            'name':'return',
+            'type':'select',
+            'options':{
+                '404':'404'
+            }
         }
+
     ],
     'URI':[
         {   
@@ -41,7 +57,7 @@ matcher_editor.condition_input_meta = {
         {
             'name':'value',
             'type':'input',
-        },
+        }
     ],
     'Host':[
         {   
@@ -57,7 +73,7 @@ matcher_editor.condition_input_meta = {
         {
             'name':'value',
             'type':'input',
-        },
+        }
     ],
     'UserAgent':[
         {   
@@ -75,7 +91,7 @@ matcher_editor.condition_input_meta = {
             'name':'value',
             'type':'input',
             'placeholder':'If operator is "is Null", this field will be ignored',
-        },
+        }
     ],
     'Referer':[
         {   
@@ -93,7 +109,7 @@ matcher_editor.condition_input_meta = {
             'name':'value',
             'type':'input',
             'placeholder':'If operator is "is Null", this field will be ignored',
-        },
+        }
     ],
     'IP':[
         {   
@@ -107,8 +123,8 @@ matcher_editor.condition_input_meta = {
         {
             'name':'value',
             'type':'input',
-        },
-    ],
+        }
+    ]
 };
 
 matcher_editor.init = function(){
