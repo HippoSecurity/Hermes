@@ -12,7 +12,7 @@ header {
 	overflow: hidden;
 }
 
-.main-content {
+main {
 	width: 85%;
 	min-width: 640px;
 	margin: 0 auto;
@@ -26,17 +26,4 @@ header {
 
 .sidebar {
 	margin-left: 20px;
-}
-
-.tree-title {
-	margin: 0;
-	color: #666;
-	border: 1px solid #ddd;
-	border-bottom: none;
-	border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
-	text-align: center;
-	background-color: #f1f4f7;
-    height: 40px;
-    line-height: 40px;
 }

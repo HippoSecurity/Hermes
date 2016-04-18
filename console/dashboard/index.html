@@ -4,7 +4,6 @@
 	<meta charset="UTF-8">
 	<title>Hermes</title>
 	<link rel="stylesheet" href="css/vendors/bootstrap.min.css">
-	<link rel="stylesheet" href="css/vendors/bootstrap-treeview.min.css">
 	<link rel="stylesheet" href="css/index.css">
 
 	<script data-mian="js/index.js" src="js/vendors/require.js"></script>
@@ -18,7 +17,7 @@
 				</li>
 
 				<li role="presentation">
-					<a href="#">规则</a>
+					<a href="config.html">规则</a>
 				</li>
 
 				<li role="presentation">
@@ -28,22 +27,19 @@
 		</nav>
 	</header>
 
-	<div class="main-content">
-		<div class="row">
-			<div class="sidebar col-md-2">
-				<h5 class="tree-title">边界树</h5>
-				<div id="tree"></div>
-			</div>
-
-			<main id="presentation" class="col-md-9">
-				<canvas id="chart"></canvas>
-			</main>
-		</div>
-	</div>
+	<main id="presentation">
+		<canvas id="chart"></canvas>
+	</main>
 </body>
+
+<script type="text/template" id="edges-list">
+	<% for(var p in data) {%>
+	<%- data[p]['name'] || '-' %>
+	<% }%>
+</script>
+
 <script src="js/vendors/chart.js"></script>
 <script src="js/vendors/jquery.js"></script>
-<script src="js/vendors/bootstrap-treeview.js"></script>
-<script src="js/vendors/bootstrap.min.js"></script>
+<script src="js/vendors/bootstrap.js"></script>
 <script src="js/index.js"></script>
 </html>

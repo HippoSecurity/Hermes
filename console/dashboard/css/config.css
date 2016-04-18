@@ -1,0 +1,21 @@
+.sidebar a{
+	text-decoration: none;
+}
+
+.sub-menu li {
+	cursor: pointer;
+	padding: 8px 10px;
+	border-bottom: 1px dashed #ccc;
+}
+
+.sub-menu li:last-child {
+	border-bottom: 0;
+}
+
+.sub-menu li.active {
+	border-left: 4px solid #ccc;
+}
+
+.matcher-title {
+	color: #959595;
+}

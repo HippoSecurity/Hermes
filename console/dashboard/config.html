@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Hermes | config</title>
+	<link rel="stylesheet" href="css/vendors/bootstrap.min.css">
+	<link rel="stylesheet" href="css/vendors/normalize.css">
+	<link rel="stylesheet" href="css/index.css">
+	<link rel="stylesheet" href="css/config.css">
+
+	<script data-mian="js/index.js" src="js/vendors/require.js"></script>
+</head>
+<body>
+	<header>
+		<nav class="navbar">
+			<ul class="nav nav-pills">
+				<li role="presentation">
+					<a href="#">主页</a>
+				</li>
+
+				<li role="presentation" class="active">
+					<a href="#">规则</a>
+				</li>
+
+				<li role="presentation">
+					<a href="#">关于</a>
+				</li>
+			</ul>
+		</nav>
+	</header>
+	
+	<div class="sidebar">
+	    <div class="row">
+	        <div class="col-sm-3 col-md-3">
+	            <div class="panel-group" id="accordion">
+	            	<!-- basic -->
+	                <div class="panel panel-default">
+	                    <div class="panel-heading">
+	                        <h4 class="panel-title">
+	                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+	                            	<span class="glyphicon glyphicon-folder-close text-primary"></span>
+	                            	<span class="text-muted">基本设置</span>
+	                            </a>
+	                        </h4>
+	                    </div>
+	                    <div id="collapseOne" class="panel-collapse collapse in">
+	                        <div class="panel-body">
+	                        	<ul class="list-unstyled sub-menu">
+	                        		<li data-tab="matcher">
+	                        			<span class="glyphicon glyphicon-pencil text-primary"></span>
+	                        			<a href="javascript:;">规则适配器</a>
+	                        		</li>
+	                        	</ul>
+	                        </div>
+	                    </div>
+	                </div>
+
+					<!-- action -->
+	                <div class="panel panel-default">
+	                    <div class="panel-heading">
+	                        <h4 class="panel-title">
+	                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+	                            	<span class="glyphicon glyphicon-th text-primary"></span>
+	                            	<span class="text-muted">自定义响应</span>
+	                            </a>
+	                        </h4>
+	                    </div>
+	                    <div id="collapseTwo" class="panel-collapse collapse">
+	                        <div class="panel-body">
+	                        	<ul class="list-unstyled sub-menu sub-menu">
+	                        		<li data-tab="filter">
+	                        			<a href="javascript:;">过滤器</a>
+	                        			<span class="label label-success">320</span>
+	                        		</li>
+	                        	</ul>
+	                        </div>
+	                    </div>
+	                </div>
+
+	                <div class="panel panel-default">
+	                    <div class="panel-heading">
+	                        <h4 class="panel-title">
+	                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+		                            <span class="glyphicon glyphicon-user text-primary"></span>
+		                            <span class="text-muted">Account</span>
+	                            </a>
+	                        </h4>
+	                    </div>
+	                    <div id="collapseThree" class="panel-collapse collapse">
+	                        <div class="panel-body">
+	                            <ul class="list-unstyled sub-menu">
+									<li>
+										<a href="http://www.jquery2dotnet.com">Orders</a>
+										<span class="label label-success">$ 320</span>
+									</li>
+									<li>
+										<a href="http://www.jquery2dotnet.com">Invoices</a>
+									</li>
+									<li>
+										<a href="http://www.jquery2dotnet.com">Tex</a>
+									</li>
+	                            </ul>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+
+	        <div class="col-sm-9 col-md-9">
+	            <div id="matcher" class="switch">
+	                <h3 class="matcher-title">规则适配器</h3>
+	                <p class="text-right">
+	                	<button class="btn btn-default">添加</button>
+	                </p>
+	                <table class="table table-hover table-striped table-bordered">
+		                <thead>
+							<tr>
+								<th width="8%">序号</th>
+								<th width="20%" >名称</th>
+								<th>匹配规则</th>
+								<th width="20%">操作</th>
+							</tr>
+		                </thead>
+
+						<tbody id="rules" class="list">
+						</tbody>
+					</table>
+	            </div>
+
+	            <div id="filter" class="switch well">
+	                <h1>filter</h1>
+	                hello filter
+	            </div>
+	        </div>
+	    </div>
+	</div>
+
+	<script id="rules-tpl" type="text/template">
+		<% list.forEach(function(data) { %>
+			<tr>
+				<% for (prop in data) {%>
+					<td><%= data[prop] %></td>
+				<% } %>
+				<td><a href="javascript:;">删除</a></td>
+			</tr>
+		<%})%>
+	</script>
+</body>
+
+<script src="js/vendors/jquery.js"></script>
+<script src="js/vendors/bootstrap.js"></script>
+<script src="js/config.js"></script>
+</html>

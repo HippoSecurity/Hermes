@@ -1,4 +1,7 @@
-require(['data/tree'], function(treeData) {
+require([
+	'js/vendors/template',
+	'js/vendors/mock'
+], function(tmpl, Mock, treeData) {
 	var data = {
 		labels: ["January", "February", "March", "April", "May", "June", "July"],
 		datasets: [{
@@ -22,17 +25,28 @@ require(['data/tree'], function(treeData) {
 		}]
 	};
 
+	var EDGES_LIST_URL = 'data.json';
+
+	Mock.mock(/\.json/, {
+		'list|1-10': [{
+			'id|+1': 1,
+			'email': '@EMAIL',
+			'regexp3': /\d{5,10}/
+		}]
+	});
+
 	var $presentation = $('#presentation');
 	var chart = $('#chart').get(0);
 	var chartCtx = chart.getContext("2d");
 	var lineChart = null;
 
 	chart.width = $presentation.width() * 0.9;
-	chart.height = 500;
+	chart.height = 550;
 
 	function renderPage() {
-		$('#tree').treeview({
-			data: treeData
+		$.getJSON(EDGES_LIST_URL, function(res) {
+			console.log(res);
+			// $('.edges-list').html(tmpl.template($('#edges-list').html(), res));
 		});
 
 		lineChart = new Chart(chartCtx).Line(data);
